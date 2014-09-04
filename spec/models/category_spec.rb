@@ -1,8 +1,9 @@
 require 'spec_helper'
-require 'pry'
+require 'shoulda/matchers'
 
 describe Category do
   
+#standard tests
   it "saves itself" do
     category=Category.new(name:"Test Category")
     category.save
@@ -15,6 +16,9 @@ describe Category do
     video2=Video.create(title:"Family Guy",description:"Test Descrip2",small_cover_url:"/tmp/family_guy.jpg",large_cover_url:"/tmp/family_guy.jpg",category:category)
     expect(category.videos).to include(video,video2)
   end
+
+#shoulda_matchers_from_thoughtbot
+  it { should have_many(:videos) }
 
 end
 

@@ -1,6 +1,9 @@
 require 'spec_helper'
+require 'shoulda/matchers'
 
 describe Video do
+
+#standard tests
   it "saves itself" do
     video=Video.new(title:"Futurama",description:"Fry, a pizza guy is accidentally frozen in 1999 and thawed out New Year's Eve 2999. -IMDB",small_cover_url:"/tmp/futurama.jpg",large_cover_url:"/tmp/futurama.jpg",category_id:1)
     video.save
@@ -25,5 +28,12 @@ describe Video do
     expect(Video.all.size).to eq(0) || expect(video.errors.any?)==true
   end
 
+#shoulda_matchers_from_thoughtbot
+  it { should belong_to(:category) }
+  it { should validate_presence_of(:title) }
+  it { should validate_presence_of(:description) }
+
+
+  
 
 end
