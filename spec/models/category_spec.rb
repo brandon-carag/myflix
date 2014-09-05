@@ -2,6 +2,9 @@ require 'spec_helper'
 require 'shoulda/matchers'
 
 describe Category do
+
+#shoulda_matchers_from_thoughtbot
+  it { should have_many(:videos) }
   
 #unnecessary tests covered by rails or shoulda_matchers from thoughtbot
   # it "saves itself" do
@@ -18,8 +21,7 @@ describe Category do
   # end
 
 
-#shoulda_matchers_from_thoughtbot
-  it { should have_many(:videos) }
+
 
 end
 
