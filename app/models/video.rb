@@ -7,7 +7,6 @@ class Video < ActiveRecord::Base;
       []
     else
       Video.where("title like?","%#{query_string}%")
-      # Video.where("title LIKE :variable, variable: "#{query_string}")
     end
   end
 

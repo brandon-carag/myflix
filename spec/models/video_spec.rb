@@ -9,24 +9,37 @@ describe Video do
   it { should validate_presence_of(:description) }
 
 #.search_by_title tests
-  it ".search_by_title returns nothing for empty string" do
+
+describe '.search_by_title' do
+
+  it "returns empty array if no match" do
+    futurama=Video.create(title:"Futurama",description:"Fry, a pizza guy is accidentally frozen in 1999 and thawed out New Year's Eve 2999. -IMDB",small_cover_url:"/tmp/futurama.jpg",large_cover_url:"/tmp/futurama.jpg",category_id:1)
+    family_guy=Video.create(title:"Family Guy",description:"Family Guy is an American adult animated sitcom created by Seth MacFarlane for the Fox Broadcasting Company. The series centers on the Griffins, a family consisting of parents Peter and Lois; their children Meg, Chris, and Stewie; and their anthropomorphic pet dog Brian. The show is set in the fictional city of Quahog, Rhode Island, and exhibits much of its humor in the form of cutaway gags that often lampoon American culture. -Wikipedia",small_cover_url:"/tmp/family_guy.jpg",large_cover_url:"/tmp/family_guy.jpg",category_id:1)
+    monk=Video.create(title:"Monk",description:"The exploits of a detective with a unique case of obsessive compulsive disorder",small_cover_url:"/tmp/monk.jpg",large_cover_url:"/tmp/monk_large.jpg",category_id:2)
+    expect(Video.search_by_title("Zebra")).to eq([])
+  end
+
+  it "returns nothing for empty string" do
     futurama=Video.create(title:"Futurama",description:"Fry, a pizza guy is accidentally frozen in 1999 and thawed out New Year's Eve 2999. -IMDB",small_cover_url:"/tmp/futurama.jpg",large_cover_url:"/tmp/futurama.jpg",category_id:1)
     expect(Video.search_by_title("")).to eq([])
   end
 
-  it ".search_by_title finds a single record" do
+  it "finds an exact match" do
     futurama=Video.create(title:"Futurama",description:"Fry, a pizza guy is accidentally frozen in 1999 and thawed out New Year's Eve 2999. -IMDB",small_cover_url:"/tmp/futurama.jpg",large_cover_url:"/tmp/futurama.jpg",category_id:1)
     family_guy=Video.create(title:"Family Guy",description:"Family Guy is an American adult animated sitcom created by Seth MacFarlane for the Fox Broadcasting Company. The series centers on the Griffins, a family consisting of parents Peter and Lois; their children Meg, Chris, and Stewie; and their anthropomorphic pet dog Brian. The show is set in the fictional city of Quahog, Rhode Island, and exhibits much of its humor in the form of cutaway gags that often lampoon American culture. -Wikipedia",small_cover_url:"/tmp/family_guy.jpg",large_cover_url:"/tmp/family_guy.jpg",category_id:1)
     monk=Video.create(title:"Monk",description:"The exploits of a detective with a unique case of obsessive compulsive disorder",small_cover_url:"/tmp/monk.jpg",large_cover_url:"/tmp/monk_large.jpg",category_id:2)
-    expect(Video.search_by_title("Monk")).to include(monk)
+    expect(Video.search_by_title("Monk")).to eq([monk])
+    # expect(Video.search_by_title("Monk")).to include(monk)
   end
 
-  it ".search_by_title finds multiple records" do
+  it "finds multiple records with partial search" do
     futurama=Video.create(title:"Futurama",description:"Fry, a pizza guy is accidentally frozen in 1999 and thawed out New Year's Eve 2999. -IMDB",small_cover_url:"/tmp/futurama.jpg",large_cover_url:"/tmp/futurama.jpg",category_id:1)
     futurama2=Video.create(title:"My title has Futurama in it",description:"Fry, a pizza guy is accidentally frozen in 1999 and thawed out New Year's Eve 2999. -IMDB",small_cover_url:"/tmp/futurama.jpg",large_cover_url:"/tmp/futurama.jpg",category_id:1)
     monk=Video.create(title:"Monk",description:"The exploits of a detective with a unique case of obsessive compulsive disorder",small_cover_url:"/tmp/monk.jpg",large_cover_url:"/tmp/monk_large.jpg",category_id:2)
-    expect(Video.search_by_title("Futurama")).to include(futurama,futurama2)
+    expect(Video.search_by_title("uturama")).to include(futurama,futurama2)
   end
+
+end
 
 #================================================================================================
 #unnecessary tests covered by rails or shoulda_matchers from thoughtbot
