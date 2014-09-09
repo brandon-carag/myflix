@@ -1,9 +1,5 @@
 class UsersController < ApplicationController
   
-
-  def front
-  end
-  
   def new    
     @user=User.new  
   end
@@ -13,7 +9,6 @@ class UsersController < ApplicationController
     if @user.save
       redirect_to root_path
     else
-      binding.pry
       render 'new'
     end
   end
