@@ -12,7 +12,7 @@ end
 
 def require_login
   unless logged_in?
-    flash[:error]="Please login to take this action."
+    flash[:warning]="Please login to take this action."
     redirect_to sign_in_path
   end
 end
