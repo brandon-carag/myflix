@@ -1,0 +1,14 @@
+<div>
+Use this to test html.erb
+</div>
+<%= link_to '#' do %>
+<%= image_tag('/tmp/futurama.jpg') %>
+<% end %>
+
+
+<!-- This is the Rails Code that seems to work -->
+<%= form_tag("/search", method: "post") do %>
+  <%= label_tag(:q, "Search for:") %>
+  <%= text_field_tag(:search_query) %>
+  <%= submit_tag("Search") %>
+<% end %>
