@@ -1,6 +1,9 @@
 class SessionsController < ApplicationController
+  before_action :require_login, only: [:new,:destroy]
+
+
   def new
-  redirect_to home_path if current_user  
+    redirect_to home_path if current_user
   end
 
   def create
