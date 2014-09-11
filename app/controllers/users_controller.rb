@@ -14,8 +14,4 @@ class UsersController < ApplicationController
     end
   end
 
-  def strong_params
-    #TODO
-  end
-
 end
