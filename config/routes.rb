@@ -9,7 +9,7 @@ Myflix::Application.routes.draw do
   get 'ui(/:action)', controller: 'ui'
 
   resources :users, only: [:show,:index,:create]
-  resources :sessions, only: [:new,:create,:destroy]
+  resources :sessions, only: [:create,:destroy]
   resources :videos, except: :destroy do
     collection do
       get '/search', to: 'videos#search'
