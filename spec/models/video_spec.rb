@@ -41,6 +41,29 @@ describe '.search_by_title' do
 
 end
 
+describe '.avg_rating' do
+  it "returns message if no reviews" do
+    video=Fabricate(:video)
+    # user=Fabricate(:user)
+    # user2=Fabricate(:user)
+    # user3=Fabricate(:user)
+    expect(video.avg_rating).to eq("Not reviewed")
+  end
+
+  it "returns one decimal digit" do
+    video=Fabricate(:video)
+    user=Fabricate(:user)
+    user2=Fabricate(:user)
+    user3=Fabricate(:user)
+    review1=Review.create(body:"text",rating:3,video_id:video.id,user_id:user.id)
+    review2=Review.create(body:"text",rating:3,video_id:video.id,user_id:user2.id)
+    review3=Review.create(body:"text",rating:1,video_id:video.id,user_id:user3.id)
+    expect(video.avg_rating).to eq(2.3)
+  end
+
+end
+
+
 #================================================================================================
 #unnecessary tests covered by rails or shoulda_matchers from thoughtbot
   # it "saves itself" do
