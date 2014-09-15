@@ -21,6 +21,4 @@ Myflix::Application.routes.draw do
 
   resources :categories, only: [:show]
 
-
-
 end
