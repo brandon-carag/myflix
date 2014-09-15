@@ -6,7 +6,7 @@
   %ul.col-md-4.clearfix
     -if logged_in?
       %li= link_to "Videos",videos_path
-      %li= link_to "My Queue"
+      %li= link_to "My Queue",queues_path
       %li= link_to "People"
   -if logged_in?      
     =form_tag(search_videos_path, method: "get",class:"form col-md-5 navbar-form form-group") do

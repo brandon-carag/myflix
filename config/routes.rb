@@ -5,7 +5,6 @@ Myflix::Application.routes.draw do
   get '/home', to: 'videos#index'
   get '/sign_in', to: 'sessions#new'
   get '/sign_out', to: 'sessions#destroy'
-  # post '/search', to: 'videos#search'
   get 'ui(/:action)', controller: 'ui'
 
   resources :users, only: [:show,:index,:create]

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pry'
 
 describe ReviewsController do 
   describe 'POST create' do
