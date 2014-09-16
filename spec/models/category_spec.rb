@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'shoulda/matchers'
-require 'pry'
 
 describe Category do
 
