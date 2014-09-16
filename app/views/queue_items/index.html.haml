@@ -14,38 +14,24 @@
               %th(width="15%") Genre
               %th(width="15%") Remove
           %tbody
-            - @videos.each do |video|
+            - @queue_items.each do |q|
               %tr
                 %td
                   %input.form-control(type="text" value="1")
                 %td
-                  = link_to video.title,video_path(video)
+                  = link_to q.video_title,video_path(q.video)
                 %td
                   = button_to "Play", nil, class: "btn btn-default"
                 %td
-                  -if video.reviews.find_by(user:current_user)              
-                    -obj=video.reviews.find_by(user:current_user)
-                    =obj.rating 
-                  -else
-                    Not rated
+                  =q.rating
+                  / -if video.reviews.find_by(user:current_user)              
+                  /   -obj=video.reviews.find_by(user:current_user)
+                  /   =obj.rating 
+                  / -else
+                  /   Not rated
                     
-                  / unless video.reviews.find_by(user:current_user)
-                  
-                  / temp_array = video.reviews.select{ |review| review.user==current_user }
-                  / temp_object
-                  / video.reviews do |review| 
-                  /   if review.user.id=12
-                  /   temp_object=review
-                  / end
-                  / end
-
-                  / Search whether   
-                  / If the user has reviewed the video, display the rating.
-                  / You will have an array of review objects
-                  / We need to iterate through the review objects 
-                  / What is the easiest way of checking whether a user has reviewed a video?
                 %td
-                  = link_to video.category.name,category_path(video.category)
+                  = link_to q.category_name,category_path(q.video)
                 %td
                   = link_to "", method: :post do
                     %i.glyphicon.glyphicon-remove
