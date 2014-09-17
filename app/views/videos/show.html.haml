@@ -16,9 +16,13 @@
   .row
     .col-sm-10.col-sm-offset-1
       = bootstrap_form_for(@review) do |f|
-        = f.select(:rating,options_for_select([1,2,3,4,5].map {|n| ["#{n} #{"Star".pluralize(n)}",n] }))
-        = f.text_area :body,label:"Write Review"
-        = f.submit "Submit",class: "btn"
+        .row
+          .col-sm-3
+            = f.select(:rating,options_for_select([5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] }),label:"Rate this video")
+        .row
+          .col-sm-8
+            = f.text_area :body,label:"Write Review",rows: 6
+            = f.submit "Submit",class: "btn"
 
       %header
         %h3= "User Reviews (#{@video.reviews.count})"
