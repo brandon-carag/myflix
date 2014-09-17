@@ -47,4 +47,16 @@ it { should belong_to(:user) }
     end
   end
 
+  # describe ".count_items" do
+  #     #the goal is to create a method that allows us to know what to 
+  #     #assign list_order to.
+  #     user = Fabricate(:user)
+  #     video = Fabricate(:video)
+  #     item1= Fabricate(:queue_item,user_id:user.id,video_id:video.id)
+  #     item2= Fabricate(:queue_item,user_id:user.id,video_id:video.id)
+
+  #     expect()
+
+  # end
+
 end  

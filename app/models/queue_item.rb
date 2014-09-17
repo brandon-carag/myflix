@@ -1,7 +1,10 @@
 class QueueItem < ActiveRecord::Base
   belongs_to :user
   belongs_to :video
+  validates_uniqueness_of :video_id, scope: :user_id
 
+
+  default_scope { order('list_order') }
   delegate :category, to: :video
 
 def video_title
@@ -23,6 +26,10 @@ def rating
   else
     "Not Rated"
   end
+end
+
+def count_items
+  count=QueueItem.where(user_id:user_id).size
 end
 
 end
