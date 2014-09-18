@@ -3,53 +3,21 @@ require 'pry'
 
 describe QueueItemsController do
 
-  describe 'get DESTROY' do
+  describe 'POST sort_list_order' do
     context "user is authenticated" do
-      before do
-        session[:user_id] = Fabricate(:user).id
-      end
-
-      it "removes a queue_item" do
-        user = Fabricate(:user)
-        item1=Fabricate(:queue_item,user_id:user.id)
-        session[:user_id] = user.id
-
-        post :destroy, id: item1.id
-
-        expect(QueueItem.count).to eq(0)
-      end
-
-      it "only allows you to destroy queue_items that belong to you" do
-        user = Fabricate(:user)
-        another_user = Fabricate(:user)
-        session[:user_id] = user.id
-        another_users_item = Fabricate(:queue_item,user_id:another_user.id)
-
-        post :destroy, id: another_users_item.id
-
-        expect(QueueItem.count).to eq(1)
-      end
-
-      it "redirects_to queue_items_path" do
-        post :destroy, id: Fabricate(:queue_item).id
-
-        expect(response).to redirect_to queue_items_path
-      end
-
+      it "does not save non-integer values" 
+      it "does not save negative integers"
+      it "does not allow blank values to be populated"
+      it "does not allow the same integer values to be populated"
+      it "orders @queue_items in ascending order"
+      it "renumbers list order based on values"
+      it "saves all or none of the list_order values"
     end
-
     context "user is unauthenticated" do
-      it "redirects to sign_in_path" do
-        session[:user_id] = nil
-        item1=Fabricate(:queue_item)
-
-        post :destroy, id: item1.id
-
-        expect(response).to redirect_to sign_in_path
-      end
-
+      it "redirects_to sign_in_path"
     end
   end
+
 
   describe 'POST create' do
     context "user is authenticated" do before do
@@ -169,5 +137,55 @@ describe QueueItemsController do
       end
     end
   end
+
+  describe 'get DESTROY' do
+    context "user is authenticated" do
+      before do
+        session[:user_id] = Fabricate(:user).id
+      end
+
+      it "removes a queue_item" do
+        user = Fabricate(:user)
+        item1=Fabricate(:queue_item,user_id:user.id)
+        session[:user_id] = user.id
+
+        post :destroy, id: item1.id
+
+        expect(QueueItem.count).to eq(0)
+      end
+
+      it "only allows you to destroy queue_items that belong to you" do
+        user = Fabricate(:user)
+        another_user = Fabricate(:user)
+        session[:user_id] = user.id
+        another_users_item = Fabricate(:queue_item,user_id:another_user.id)
+
+        post :destroy, id: another_users_item.id
+
+        expect(QueueItem.count).to eq(1)
+      end
+
+      it "redirects_to queue_items_path" do
+        post :destroy, id: Fabricate(:queue_item).id
+
+        expect(response).to redirect_to queue_items_path
+      end
+
+    end
+
+    context "user is unauthenticated" do
+      it "redirects to sign_in_path" do
+        session[:user_id] = nil
+        item1=Fabricate(:queue_item)
+
+        post :destroy, id: item1.id
+
+        expect(response).to redirect_to sign_in_path
+      end
+
+    end
+  end
+
+
 end
 

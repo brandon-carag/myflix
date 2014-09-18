@@ -1,6 +1,24 @@
 class QueueItemsController < ApplicationController
   before_action :require_login, only: [:index,:create,:destroy]
 
+  def sort_list_order
+    binding.pry
+    #Order the queue items array based upon the list_order
+    #Use a transaction to update the queue_item_objects with the correct list order
+    #Initialize a counter.  Renumber each one.
+
+    #hash format: params[queue_items] = { queue_item_id => list_order, queue_item_id => list_order }
+    counter = 1
+    params["queue_items"].each do | k,v |
+      item = QueueItem.find(k.to_i) 
+      item.update(list_order:v.to_i)
+      counter +=1
+    end
+
+    redirect_to queue_items_path
+
+  end
+
   def index
     @queue_items=current_user.queue_items
     video_ids = @queue_items.map { |item|item.video_id } #Produces an array of video ids

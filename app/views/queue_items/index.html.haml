@@ -1,3 +1,9 @@
+= bootstrap_form_tag url: queue_items_sort_list_order_path do |f|
+  - @queue_items.each do |q|
+    / = f.text_field q.video.title, value: "#{q.list_order}"
+    = f.text_field("queue_items[#{q.id}]",hide_label:true,value: q.list_order)
+  = f.submit
+
 %section.my_queue.container
   .row
     .col-sm-10.col-sm-offset-1
@@ -17,7 +23,7 @@
             - @queue_items.each do |q|
               %tr
                 %td
-                  =q.list_order
+                  %input.form-control(type="text" value="#{q.list_order}")
                 %td
                   = link_to q.video_title,video_path(q.video)
                 %td
