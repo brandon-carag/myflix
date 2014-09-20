@@ -5,8 +5,23 @@ describe QueueItemsController do
 
   describe 'POST sort_list_order' do
     context "user is authenticated" do
-      it "does not save non-integer values" 
-      it "does not save negative integers"
+      it "does not save non-integer values" do
+      item1=Fabricate(:queue_item)
+
+      post :sort_list_order, queue_items:{item1.id=>"non integer text"}
+
+      expect(item1.list_order).to eq(1)
+      end
+
+      it "does not save negative integers" do
+      item1=Fabricate(:queue_item)
+
+      post :sort_list_order, queue_items:{item1.id=> -1}
+
+      expect(item1.list_order).not_to eq(-1)
+      expect(item1.list_order).to eq(item1.)
+      end
+
       it "does not allow blank values to be populated"
       it "does not allow the same integer values to be populated"
       it "orders @queue_items in ascending order"

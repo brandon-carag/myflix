@@ -1,8 +1,7 @@
-= bootstrap_form_tag url: queue_items_sort_list_order_path do |f|
-  - @queue_items.each do |q|
-    / = f.text_field q.video.title, value: "#{q.list_order}"
-    = f.text_field("queue_items[#{q.id}]",hide_label:true,value: q.list_order)
-  = f.submit
+/ = bootstrap_form_tag url: queue_items_sort_list_order_path do |f|
+/   - @queue_items.each do |q|
+/     = f.text_field("queue_items[#{q.id}]",hide_label:true,value: q.list_order)
+/   = f.submit
 
 %section.my_queue.container
   .row
@@ -10,39 +9,33 @@
       %article
         %header
           %h2 My Queue
-        %table.table
-          %thead
-            %tr
-              %th(width="10%") List Order
-              %th(width="30%") Video Title
-              %th(width="10%") Play
-              %th(width="20%") Rating
-              %th(width="15%") Genre
-              %th(width="15%") Remove
-          %tbody
-            - @queue_items.each do |q|
+        = bootstrap_form_tag url: queue_items_sort_list_order_path do |f|
+          %table.table
+            %thead
               %tr
-                %td
-                  %input.form-control(type="text" value="#{q.list_order}")
-                %td
-                  = link_to q.video_title,video_path(q.video)
-                %td
-                  = button_to "Play", nil, class: "btn btn-default"
-                %td
-                  =q.rating
-                  / -if video.reviews.find_by(user:current_user)              
-                  /   -obj=video.reviews.find_by(user:current_user)
-                  /   =obj.rating 
-                  / -else
-                  /   Not rated
+                %th(width="10%") List Order
+                %th(width="30%") Video Title
+                %th(width="10%") Play
+                %th(width="20%") Rating
+                %th(width="15%") Genre
+                %th(width="15%") Remove
+            %tbody
+              - @queue_items.each do |q|
+                %tr
+                  %td
+                    = f.text_field("queue_items[#{q.id}]",hide_label:true,value: q.list_order)
+                  %td
+                    = link_to q.video_title,video_path(q.video)
+                  %td
+                    = button_to "Play", nil, class: "btn btn-default"
+                  %td
+                    =q.rating
+                  %td
+                    = link_to q.category_name,category_path(q.video)
+                  %td
+                    = link_to "",queue_item_path(q.id), method: :delete, class: "i glyphicon glyphicon-remove"
+          =f.submit value: "Update Instant Queue", class: "btn btn-default"
+
+
                     
-                %td
-                  = link_to q.category_name,category_path(q.video)
-                %td
-                  = link_to "",queue_item_path(q.id), method: :delete, class: "i glyphicon glyphicon-remove" 
-
-        = button_to "Update Instant Queue", nil, class: "btn btn-default"
-
-
-                  
-                  
+                    

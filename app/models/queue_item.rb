@@ -2,6 +2,7 @@ class QueueItem < ActiveRecord::Base
   belongs_to :user
   belongs_to :video
   validates_uniqueness_of :video_id, scope: :user_id
+  validates :list_order, numericality: { :greater_than_or_equal_to => 1, only_integer: true }
 
 
   default_scope { order('list_order') }
