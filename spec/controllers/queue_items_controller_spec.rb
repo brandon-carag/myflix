@@ -5,28 +5,65 @@ describe QueueItemsController do
 
   describe 'POST sort_list_order' do
     context "user is authenticated" do
-      it "does not save non-integer values" do
-      item1=Fabricate(:queue_item)
+      context "input is valid" do
 
-      post :sort_list_order, queue_items:{item1.id=>"non integer text"}
+        it "Assigns list_order" do
+          item1 = Fabricate(:queue_item)
+          item2 = Fabricate(:queue_item)
+          item3 = Fabricate(:queue_item)
 
-      expect(item1.list_order).to eq(1)
+          post :sort_list_order, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => 1 }
+
+          expect(item1.reload.list_order).to eq(3)
+          expect(item2.reload.list_order).to eq(2)
+          expect(item3.reload.list_order).to eq(1)
+        end
+
       end
 
-      it "does not save negative integers" do
-      item1=Fabricate(:queue_item)
+      context "input is invalid" do
 
-      post :sort_list_order, queue_items:{item1.id=> -1}
 
-      expect(item1.list_order).not_to eq(-1)
-      expect(item1.list_order).to eq(item1.)
+        it "does not save non-integer values" do
+        item1 = Fabricate(:queue_item)
+
+        post :sort_list_order, queue_items:{item1.id=>"non integer text"}
+
+        expect(item1.reload.list_order).to eq(1)
+        end
+
+        it "does not save negative integers" do
+        item1=Fabricate(:queue_item)
+
+        post :sort_list_order, queue_items:{item1.id=> -1}
+
+        expect(item1.reload.list_order).to eq(1)
+        end
+
+        it "does not save any list_order value if even one is invalid"
+
+        it "does not allow blank values to be populated" do
+        item1=Fabricate(:queue_item)
+
+        post :sort_list_order, queue_items:{item1.id=> " "}
+
+        expect(item1.reload.list_order).to eq(1)
+        end
+
+        it "does not allow the same integer values to be populated" do
+          item1 = Fabricate(:queue_item)
+          item1_list_order = item1.list_order
+          item2 = Fabricate(:queue_item)
+          item2_list_order = item2.list_order
+
+          post :sort_list_order, queue_items:{item1.id=> 1 ,item2.id => 1 }
+
+          expect(item1.reload.list_order).to eq(item1_list_order)
+          expect(item2.reload.list_order).to eq(item2_list_order)
+          expect(item2.reload.list_order).not_to eq(1) 
+        end
+
       end
-
-      it "does not allow blank values to be populated"
-      it "does not allow the same integer values to be populated"
-      it "orders @queue_items in ascending order"
-      it "renumbers list order based on values"
-      it "saves all or none of the list_order values"
     end
     context "user is unauthenticated" do
       it "redirects_to sign_in_path"
