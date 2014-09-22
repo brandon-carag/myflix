@@ -1,24 +1,26 @@
 class QueueItemsController < ApplicationController
-  before_action :require_login, only: [:index,:create,:destroy]
+  before_action :require_login, only: [:index,:create,:destroy,:sort_list_order]
 
   def sort_list_order
     counter = 1
-    array = params[:queue_items].sort_by{ |k,v| v }
-    array.each do |k,v|
-      item = QueueItem.find(k.to_i) 
+
+    if params[:queue_items].values.map{|x|x.to_i}.include?(0)
+      flash[:danger]="You can only re-order the queue by using integers and cannot use blanks."
+
+    elsif params[:queue_items].values != params[:queue_items].values.uniq
+      flash[:danger]="You must use unique integers when populating your queue selection."
+
+    else
+      array = params[:queue_items].sort_by{ |k,v| v.to_i }
+
+      array.each do |k,v|
+      item = QueueItem.find(k)
       item.update(list_order:counter)
       counter +=1
+      end
     end
 
     redirect_to queue_items_path
-
-    #Order the queue items array based upon the list_order
-    #Use a transaction to update the queue_item_objects with the correct list order
-    #Initialize a counter.  Renumber each one.
-
-    #hash format: params[queue_items] = { queue_item_id => list_order, queue_item_id => list_order }
-    
-
 
   end
 
@@ -46,3 +48,6 @@ class QueueItemsController < ApplicationController
   end
 
 end
+
+
+#This is the array it's having issues sorting: [["20", "100"], ["21", "2"], ["22", "3"]]

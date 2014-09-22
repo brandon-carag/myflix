@@ -5,6 +5,12 @@ describe QueueItemsController do
 
   describe 'POST sort_list_order' do
     context "user is authenticated" do
+      before do
+        session[:user_id] = Fabricate(:user).id
+        Fabrication.clear_definitions
+      end
+
+
       context "input is valid" do
 
         it "Assigns list_order" do
@@ -19,16 +25,40 @@ describe QueueItemsController do
           expect(item3.reload.list_order).to eq(1)
         end
 
+        it "assigns list_order when list_order is not sequential" do
+          item1 = Fabricate(:queue_item)
+          item2 = Fabricate(:queue_item)
+          item3 = Fabricate(:queue_item)
+
+          post :sort_list_order, queue_items:{item1.id=>8 ,item2.id =>5 ,item3.id => 2 }
+
+          expect(item1.reload.list_order).to eq(3)
+          expect(item2.reload.list_order).to eq(2)
+          expect(item3.reload.list_order).to eq(1)
+
+        end
+
+        it "Redirects to queue_items_path" do
+          item1 = Fabricate(:queue_item)
+          item2 = Fabricate(:queue_item)
+          item3 = Fabricate(:queue_item)
+
+          post :sort_list_order, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => 1 }
+
+          expect(response).to redirect_to queue_items_path
+
+        end
+
       end
 
       context "input is invalid" do
 
-
         it "does not save non-integer values" do
         item1 = Fabricate(:queue_item)
-
+        puts item1.list_order
         post :sort_list_order, queue_items:{item1.id=>"non integer text"}
 
+        expect(flash[:danger]).to be_truthy
         expect(item1.reload.list_order).to eq(1)
         end
 
@@ -40,14 +70,37 @@ describe QueueItemsController do
         expect(item1.reload.list_order).to eq(1)
         end
 
-        it "does not save any list_order value if even one is invalid"
+        it "does not save any list_order value if even one is invalid" do
+          item1 = Fabricate(:queue_item)
+          item2 = Fabricate(:queue_item)
+          item3 = Fabricate(:queue_item)
+
+          post :sort_list_order, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => "bad_value" }
+
+          expect(item1.reload.list_order).to eq(1)
+          expect(item2.reload.list_order).to eq(2)
+          expect(item3.reload.list_order).to eq(3)
+        end
+
+        it "saves list_order for list orders with multiple digits" do
+          item1 = Fabricate(:queue_item)
+          item2 = Fabricate(:queue_item)
+          item3 = Fabricate(:queue_item)
+
+          post :sort_list_order, queue_items:{item1.id=>100 ,item2.id =>50 ,item3.id => 5 }
+
+          expect(item1.reload.list_order).to eq(3)
+          expect(item2.reload.list_order).to eq(2)
+          expect(item3.reload.list_order).to eq(1)
+
+        end
 
         it "does not allow blank values to be populated" do
         item1=Fabricate(:queue_item)
 
         post :sort_list_order, queue_items:{item1.id=> " "}
 
-        expect(item1.reload.list_order).to eq(1)
+        expect(flash[:danger]).to be_truthy
         end
 
         it "does not allow the same integer values to be populated" do
@@ -63,10 +116,23 @@ describe QueueItemsController do
           expect(item2.reload.list_order).not_to eq(1) 
         end
 
+        it "redirects_to queue_items_path" do
+        item1=Fabricate(:queue_item)
+
+        post :sort_list_order, queue_items:{item1.id=> " "}
+
+        expect(response).to redirect_to queue_items_path
+
+        end
+
       end
     end
     context "user is unauthenticated" do
-      it "redirects_to sign_in_path"
+      it "redirects_to sign_in_path" do
+      session[:user_id] = nil
+
+      expect(response).to redirect_to sign_in_path
+      end
     end
   end
 
@@ -127,8 +193,8 @@ describe QueueItemsController do
     context "user is unauthenticated" do
 
       it "redirects to sign_in_path" do
-      session[:user_id] = nil
       post :create, queue_item: Fabricate.attributes_for(:queue_item)
+      session[:user_id] = nil
 
       expect(response).to redirect_to sign_in_path
       end
