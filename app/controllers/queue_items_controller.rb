@@ -2,25 +2,42 @@ class QueueItemsController < ApplicationController
   before_action :require_login, only: [:index,:create,:destroy,:sort_list_order]
 
   def sort_list_order
-    counter = 1
-
-    if params[:queue_items].values.map{|x|x.to_i}.include?(0)
-      flash[:danger]="You can only re-order the queue by using integers and cannot use blanks."
-
-    elsif params[:queue_items].values != params[:queue_items].values.uniq
-      flash[:danger]="You must use unique integers when populating your queue selection."
-
-    else
-      array = params[:queue_items].sort_by{ |k,v| v.to_i }
-
-      array.each do |k,v|
-      item = QueueItem.find(k)
-      item.update(list_order:counter)
-      counter +=1
+  begin
+    ActiveRecord::Base.transaction do 
+      params[:queue_items].each do |k,v|
+        item = QueueItem.find(k)
+        item.update!(list_order:v)
       end
     end
+  rescue
+    flash[:danger]="Invalid list order values.  Please use unique, whole numbers."
+    redirect_to queue_items_path
+    return
+  end
+
+  current_user.queue_items.each_with_index do |queue_item,index|
+    queue_item.update(list_order: index+1)
+  end
 
     redirect_to queue_items_path
+
+      # counter = 1
+
+    # if params[:queue_items].values.map{|x|x.to_i}.include?(0)
+    #   flash[:danger]="You can only re-order the queue by using integers and cannot use blanks."
+
+    # elsif params[:queue_items].values != params[:queue_items].values.uniq
+    #   flash[:danger]="You must use unique integers when populating your queue selection."
+
+    # else
+    #   array = params[:queue_items].sort_by{ |k,v| v.to_i }
+
+    #   array.each do |k,v|
+    #   item = QueueItem.find(k)
+    #   item.update(list_order:counter)
+    #   counter +=1
+    #   end
+    # end
 
   end
 
@@ -50,4 +67,3 @@ class QueueItemsController < ApplicationController
 end
 
 
-#This is the array it's having issues sorting: [["20", "100"], ["21", "2"], ["22", "3"]]
