@@ -12,7 +12,7 @@ describe QueueItemsController do
 
 
       context "input is valid" do
-
+        
         it "Assigns list_order" do
           item1 = Fabricate(:queue_item)
           item2 = Fabricate(:queue_item)
