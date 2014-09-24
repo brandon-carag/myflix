@@ -6,17 +6,20 @@ describe QueueItemsController do
   describe 'POST sort_list_order' do
     context "user is authenticated" do
       before do
-        session[:user_id] = Fabricate(:user).id
         Fabrication.clear_definitions
+        session[:user_id] = Fabricate(:user).id
       end
 
 
       context "input is valid" do
 
         it "Assigns list_order" do
-          item1 = Fabricate(:queue_item)
-          item2 = Fabricate(:queue_item)
-          item3 = Fabricate(:queue_item)
+          user = Fabricate(:user)
+          session[:user_id] = user.id
+          item1 = Fabricate(:queue_item,user_id:user.id)
+          item2 = Fabricate(:queue_item,user_id:user.id)
+          item3 = Fabricate(:queue_item,user_id:user.id)
+
 
           post :sort_list_order, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => 1 }
 
@@ -56,9 +59,11 @@ describe QueueItemsController do
         end
 
         it "Redirects to queue_items_path" do
-          item1 = Fabricate(:queue_item)
-          item2 = Fabricate(:queue_item)
-          item3 = Fabricate(:queue_item)
+          user = Fabricate(:user)
+          session[:user_id] = user.id
+          item1 = Fabricate(:queue_item,user_id:user.id)
+          item2 = Fabricate(:queue_item,user_id:user.id)
+          item3 = Fabricate(:queue_item,user_id:user.id)
 
           post :sort_list_order, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => 1 }
 
@@ -66,31 +71,49 @@ describe QueueItemsController do
 
         end
 
+        it "rejects attempts to edit list_order for another user's queue items" do
+          user = Fabricate(:user)
+          session[:user_id] = user.id
+          item1 = Fabricate(:queue_item,user_id:user.id)  
+
+          post :sort_list_order, queue_items:{item1.id => 1000 }
+
+          expect(item1.reload.list_order).to eq(1)
+
+        end
+
+
       end
 
       context "input is invalid" do
 
         it "does not save non-integer values" do
-        item1 = Fabricate(:queue_item)
-        puts item1.list_order
-        post :sort_list_order, queue_items:{item1.id=>"non integer text"}
+          user = Fabricate(:user)
+          session[:user_id] = user.id
+          item1 = Fabricate(:queue_item,user_id:user.id)
 
-        expect(flash[:danger]).to be_truthy
-        expect(item1.reload.list_order).to eq(1)
+          post :sort_list_order, queue_items:{item1.id=>"non integer text"}
+
+          expect(flash[:danger]).to be_truthy
+          expect(item1.reload.list_order).to eq(1)
         end
 
         it "does not save negative integers" do
-        item1=Fabricate(:queue_item)
+          user = Fabricate(:user)
+          session[:user_id] = user.id
+          item1 = Fabricate(:queue_item,user_id:user.id)
 
-        post :sort_list_order, queue_items:{item1.id=> -1}
+          post :sort_list_order, queue_items:{item1.id=> -1}
 
-        expect(item1.reload.list_order).to eq(1)
+          expect(item1.reload.list_order).to eq(1)
         end
 
         it "does not save any list_order value if even one is invalid" do
-          item1 = Fabricate(:queue_item)
-          item2 = Fabricate(:queue_item)
-          item3 = Fabricate(:queue_item)
+          user = Fabricate(:user)
+          session[:user_id] = user.id
+          item1 = Fabricate(:queue_item,user_id:user.id)
+          item2 = Fabricate(:queue_item,user_id:user.id)
+          item3 = Fabricate(:queue_item,user_id:user.id)
 
           post :sort_list_order, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => "bad_value" }
 
@@ -101,19 +124,21 @@ describe QueueItemsController do
 
 
         it "does not allow blank values to be populated" do
-        item1=Fabricate(:queue_item)
+          user = Fabricate(:user)
+          session[:user_id] = user.id
+          item1=Fabricate(:queue_item,user_id:user.id)
 
-        post :sort_list_order, queue_items:{item1.id=> " "}
+          post :sort_list_order, queue_items:{item1.id=> " "}
 
-        expect(flash[:danger]).to be_truthy
+          expect(flash[:danger]).to be_truthy
         end
 
         it "redirects_to queue_items_path" do
-        item1=Fabricate(:queue_item)
+          item1=Fabricate(:queue_item)
 
-        post :sort_list_order, queue_items:{item1.id=> " "}
+          post :sort_list_order, queue_items:{item1.id=> " "}
 
-        expect(response).to redirect_to queue_items_path
+          expect(response).to redirect_to queue_items_path
 
         end
 
@@ -121,7 +146,7 @@ describe QueueItemsController do
     end
     context "user is unauthenticated" do
       it "redirects_to sign_in_path" do
-      item1 = Fabricate(:user)
+      item1 = Fabricate(:queue_item)
 
       post :sort_list_order, queue_items:{item1.id=> "2"}
 

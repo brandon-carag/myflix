@@ -3,41 +3,12 @@ class QueueItemsController < ApplicationController
 
   def sort_list_order
   begin
-    ActiveRecord::Base.transaction do 
-      params[:queue_items].each do |k,v|
-        item = QueueItem.find(k)
-        item.update!(list_order:v)
-      end
-    end
-  rescue
+    update_queue_item_list_order 
+    rescue
     flash[:danger]="Invalid list order values.  Please use unique, whole numbers."
-    redirect_to queue_items_path
-    return
   end
-
-  current_user.queue_items.each_with_index do |queue_item,index|
-    queue_item.update(list_order: index+1)
-  end
-
-    redirect_to queue_items_path
-
-      # counter = 1
-
-    # if params[:queue_items].values.map{|x|x.to_i}.include?(0)
-    #   flash[:danger]="You can only re-order the queue by using integers and cannot use blanks."
-
-    # elsif params[:queue_items].values != params[:queue_items].values.uniq
-    #   flash[:danger]="You must use unique integers when populating your queue selection."
-
-    # else
-    #   array = params[:queue_items].sort_by{ |k,v| v.to_i }
-
-    #   array.each do |k,v|
-    #   item = QueueItem.find(k)
-    #   item.update(list_order:counter)
-    #   counter +=1
-    #   end
-    # end
+  current_user.renumber_queue_item_list_order
+  redirect_to queue_items_path
 
   end
 
@@ -62,6 +33,17 @@ class QueueItemsController < ApplicationController
     queue_item = QueueItem.find(params[:id])
     queue_item.destroy if queue_item.user.id == current_user.id
     redirect_to queue_items_path
+  end
+#==============================
+  private
+
+  def update_queue_item_list_order
+    ActiveRecord::Base.transaction do 
+      params[:queue_items].each do |k,v|
+        item = QueueItem.find(k)
+        item.update!(list_order:v) if item.user_id == current_user.id
+      end
+    end
   end
 
 end
