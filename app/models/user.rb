@@ -10,4 +10,9 @@ class User < ActiveRecord::Base
     queue_items.each_with_index { |queue_item,index| queue_item.update(list_order: index+1) } 
   end
 
+  def video_in_queue?(video)
+    array = queue_items.map {|n| n.video_id}
+    array.include?(video.id)
+  end
+
 end

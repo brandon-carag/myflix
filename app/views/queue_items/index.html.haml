@@ -29,6 +29,11 @@
                   %td
                     = button_to "Play", nil, class: "btn btn-default"
                   %td
+                    / = f.select("test_hash[#{q.id}]",options_for_select([5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] } ),hide_label:true,prompt:"#{q.rating} #{"Star".pluralize(q.rating)}")
+
+                    / = f.select "test_hash[#{q.id}]", ([5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] }), { hide_label:true }, :prompt => "hello"
+                    / { class: "selectpicker" }
+                    = f.select "test_hash[#{q.id}]", ([5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] }), { hide_label:true }, :prompt => "5 Stars", :selected => q.rating
                     =q.rating
                   %td
                     = link_to q.category_name,category_path(q.video)

@@ -2,6 +2,7 @@ class QueueItemsController < ApplicationController
   before_action :require_login, only: [:index,:create,:destroy,:sort_list_order]
 
   def sort_list_order
+
   begin
     update_queue_item_list_order 
     rescue
@@ -32,7 +33,9 @@ class QueueItemsController < ApplicationController
   def destroy
     queue_item = QueueItem.find(params[:id])
     queue_item.destroy if queue_item.user.id == current_user.id
+    current_user.renumber_queue_item_list_order
     redirect_to queue_items_path
+
   end
 #==============================
   private
