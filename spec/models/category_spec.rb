@@ -3,10 +3,9 @@ require 'shoulda/matchers'
 
 describe Category do
 
-#shoulda_matchers_from_thoughtbot
 it { should have_many(:videos) }
 
-describe '# recent_videos' do
+describe '#recent_videos' do
 
   it 'returns an empty array if there are no videos in the category' do
     test_category=Category.create(name:"Drama")

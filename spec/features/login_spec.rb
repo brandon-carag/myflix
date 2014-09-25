@@ -16,15 +16,11 @@ end
 
 feature "Add video to queue" do
   scenario "With valid email and password" do
-    user = Fabricate(:user,password:"password")
     video1 = Fabricate(:video)
     video3 = Fabricate(:video)
     video2 = Fabricate(:video)
 
-    visit sign_in_path
-    fill_in 'Email', with: user.email
-    fill_in 'Password', :with => "password"
-    click_button "Sign In"
+    sign_in
     find(:xpath, "//a[@href='/videos/1']").click
     click_link "+ My Queue"
 
