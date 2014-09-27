@@ -3,13 +3,12 @@ require 'pry'
 
 describe QueueItemsController do
 
-  describe 'POST sort_list_order' do
+  describe 'POST update_queue' do
     context "user is authenticated" do
       before do
         Fabrication.clear_definitions
-        session[:user_id] = Fabricate(:user).id
+        # session[:user_id] = Fabricate(:user).id
       end
-
 
       context "input is valid" do
 
@@ -21,7 +20,7 @@ describe QueueItemsController do
           item3 = Fabricate(:queue_item,user_id:user.id)
 
 
-          post :sort_list_order, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => 1 }
+          post :update_queue, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => 1 },reviews:{}
 
           expect(item1.reload.list_order).to eq(3)
           expect(item2.reload.list_order).to eq(2)
@@ -35,7 +34,7 @@ describe QueueItemsController do
           item2 = Fabricate(:queue_item,user_id:user.id)
           item3 = Fabricate(:queue_item,user_id:user.id)
 
-          post :sort_list_order, queue_items:{item1.id=>8 ,item2.id =>5 ,item3.id => 2 }
+          post :update_queue, queue_items:{item1.id=>8 ,item2.id =>5 ,item3.id => 2 },reviews:{}
 
           expect(item1.reload.list_order).to eq(3)
           expect(item2.reload.list_order).to eq(2)
@@ -50,7 +49,7 @@ describe QueueItemsController do
           item2 = Fabricate(:queue_item,user_id:user.id)
           item3 = Fabricate(:queue_item,user_id:user.id)
 
-          post :sort_list_order, queue_items:{item1.id=>100 ,item2.id =>50 ,item3.id => 5 }
+          post :update_queue, queue_items:{item1.id=>100 ,item2.id =>50 ,item3.id => 5 },reviews:{}
 
           expect(item1.reload.list_order).to eq(3)
           expect(item2.reload.list_order).to eq(2)
@@ -65,7 +64,7 @@ describe QueueItemsController do
           item2 = Fabricate(:queue_item,user_id:user.id)
           item3 = Fabricate(:queue_item,user_id:user.id)
 
-          post :sort_list_order, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => 1 }
+          post :update_queue, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => 1 }
 
           expect(response).to redirect_to queue_items_path
 
@@ -76,12 +75,36 @@ describe QueueItemsController do
           session[:user_id] = user.id
           item1 = Fabricate(:queue_item,user_id:user.id)  
 
-          post :sort_list_order, queue_items:{item1.id => 1000 }
+          post :update_queue, queue_items:{item1.id => 1000 },reviews:{}
 
           expect(item1.reload.list_order).to eq(1)
 
         end
 
+        it "creates a review and rating" do
+          user = Fabricate(:user)
+          session[:user_id] = user.id
+          video1 = Fabricate(:video)
+          item1 = Fabricate(:queue_item,user_id:user.id,video_id:video1.id)  
+
+          post :update_queue, reviews:{item1.id => 5}
+
+          expect(item1.reload.rating).to eq(5)
+          
+        end
+
+        it "updates a single review's rating" do
+          user = Fabricate(:user)
+          session[:user_id] = user.id
+          video1 = Fabricate(:video)
+          review1 = Fabricate(:review,user_id:user.id,rating:1)
+
+          item1 = Fabricate(:queue_item,user_id:user.id,video_id:video1.id)  
+
+          post :update_queue, reviews:{item1.id => 5}
+
+          expect(item1.rating).to eq(5)
+        end
 
       end
 
@@ -92,7 +115,7 @@ describe QueueItemsController do
           session[:user_id] = user.id
           item1 = Fabricate(:queue_item,user_id:user.id)
 
-          post :sort_list_order, queue_items:{item1.id=>"non integer text"}
+          post :update_queue, queue_items:{item1.id=>"non integer text"}
 
           expect(flash[:danger]).to be_truthy
           expect(item1.reload.list_order).to eq(1)
@@ -103,19 +126,19 @@ describe QueueItemsController do
           session[:user_id] = user.id
           item1 = Fabricate(:queue_item,user_id:user.id)
 
-          post :sort_list_order, queue_items:{item1.id=> -1}
+          post :update_queue, queue_items:{item1.id=> -1}
 
           expect(item1.reload.list_order).to eq(1)
         end
 
         it "does not save any list_order value if even one is invalid" do
           user = Fabricate(:user)
-          session[:user_id] = user.id
+          set_user_session(user)
           item1 = Fabricate(:queue_item,user_id:user.id)
           item2 = Fabricate(:queue_item,user_id:user.id)
           item3 = Fabricate(:queue_item,user_id:user.id)
 
-          post :sort_list_order, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => "bad_value" }
+          post :update_queue, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => "bad_value" }
 
           expect(item1.reload.list_order).to eq(1)
           expect(item2.reload.list_order).to eq(2)
@@ -125,18 +148,19 @@ describe QueueItemsController do
 
         it "does not allow blank values to be populated" do
           user = Fabricate(:user)
-          session[:user_id] = user.id
+          set_user_session(user)
           item1=Fabricate(:queue_item,user_id:user.id)
 
-          post :sort_list_order, queue_items:{item1.id=> " "}
+          post :update_queue, queue_items:{item1.id=> " "}
 
           expect(flash[:danger]).to be_truthy
         end
 
         it "redirects_to queue_items_path" do
+          set_user_session
           item1=Fabricate(:queue_item)
 
-          post :sort_list_order, queue_items:{item1.id=> " "}
+          post :update_queue, queue_items:{item1.id=> " "}
 
           expect(response).to redirect_to queue_items_path
 
@@ -146,9 +170,10 @@ describe QueueItemsController do
     end
     context "user is unauthenticated" do
       it "redirects_to sign_in_path" do
+      clear_user_session
       item1 = Fabricate(:queue_item)
 
-      post :sort_list_order, queue_items:{item1.id=> "2"}
+      post :update_queue, queue_items:{item1.id=> "2"}
 
       expect(response).to redirect_to sign_in_path
       end
@@ -313,7 +338,7 @@ describe QueueItemsController do
 
     context "user is unauthenticated" do
       it "redirects to sign_in_path" do
-        session[:user_id] = nil
+        clear_user_session
         item1=Fabricate(:queue_item)
 
         post :destroy, id: item1.id

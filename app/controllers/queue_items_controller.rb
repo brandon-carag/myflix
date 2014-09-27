@@ -1,14 +1,16 @@
 class QueueItemsController < ApplicationController
-  before_action :require_login, only: [:index,:create,:destroy,:sort_list_order]
+  before_action :require_login, only: [:index,:create,:destroy,:update_queue]
 
-  def sort_list_order
-
+  def update_queue 
   begin
+    update_review_ratings
     update_queue_item_list_order 
     rescue
     flash[:danger]="Invalid list order values.  Please use unique, whole numbers."
   end
   current_user.renumber_queue_item_list_order
+  
+
   redirect_to queue_items_path
 
   end
@@ -39,6 +41,16 @@ class QueueItemsController < ApplicationController
   end
 #==============================
   private
+
+  def update_review_ratings
+    ActiveRecord::Base.transaction do 
+    params[:reviews].each do |k,v|
+      item = QueueItem.find(k)
+      item.update_rating(v) if item.user_id == current_user.id 
+    end
+  end
+
+  end
 
   def update_queue_item_list_order
     ActiveRecord::Base.transaction do 

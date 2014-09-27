@@ -29,6 +29,16 @@ def rating
   end
 end
 
+def update_rating(num_stars)
+  if video.reviews.find_by(user:user_id)
+    review = video.reviews.find_by(user:user_id)
+    review.update_columns(rating:num_stars)
+  else
+    review = Review.new(user_id:user.id,video_id:video.id,rating:num_stars)
+    review.save(validate: false)
+  end
+end
+
 def count_items
   count=QueueItem.where(user_id:user_id).size
 end

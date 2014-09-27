@@ -1,15 +1,10 @@
-/ = bootstrap_form_tag url: queue_items_sort_list_order_path do |f|
-/   - @queue_items.each do |q|
-/     = f.text_field("queue_items[#{q.id}]",hide_label:true,value: q.list_order)
-/   = f.submit
-
 %section.my_queue.container
   .row
     .col-sm-10.col-sm-offset-1
       %article
         %header
           %h2 My Queue
-        = bootstrap_form_tag url: queue_items_sort_list_order_path do |f|
+        = bootstrap_form_tag url: queue_items_update_queue_path do |f|
           %table.table
             %thead
               %tr
@@ -29,12 +24,8 @@
                   %td
                     = button_to "Play", nil, class: "btn btn-default"
                   %td
-                    / = f.select("test_hash[#{q.id}]",options_for_select([5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] } ),hide_label:true,prompt:"#{q.rating} #{"Star".pluralize(q.rating)}")
-
-                    / = f.select "test_hash[#{q.id}]", ([5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] }), { hide_label:true }, :prompt => "hello"
-                    / { class: "selectpicker" }
-                    = f.select "test_hash[#{q.id}]", ([5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] }), { hide_label:true }, :prompt => "5 Stars", :selected => q.rating
-                    =q.rating
+                    = f.select("reviews[#{q.id}]",options_for_select( [5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] },q.rating),hide_label:true,include_blank:true)
+                    / = f.select("reviews[#{q.id}]",options_for_select( [5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] }),hide_label:true,prompt:"#{q.rating} #{"Star".pluralize(q.rating)}")
                   %td
                     = link_to q.category_name,category_path(q.video)
                   %td
@@ -42,5 +33,4 @@
           =f.submit value: "Update Instant Queue", class: "btn btn-default"
 
 
-                    
                     

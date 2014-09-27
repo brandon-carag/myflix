@@ -5,3 +5,16 @@ def sign_in(user=nil)
   fill_in 'Password', :with => "password"
   click_button "Sign In"
 end
+
+def clear_user_session
+  session[:user_id] = nil
+end
+
+def redirect_to_sign_in_path
+  expect(response).to redirect_to sign_in_path
+end
+
+def set_user_session(user=nil)
+  the_user = user || Fabricate(:user)
+  session[:user_id] = the_user.id
+end
