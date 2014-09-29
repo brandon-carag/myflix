@@ -1,4 +1,7 @@
 class Video < ActiveRecord::Base;
+  has_many :reviews, -> { order 'created_at DESC' }
+  has_many :queue_items
+
   belongs_to :category
   validates_presence_of :title,:description
 
@@ -8,6 +11,10 @@ class Video < ActiveRecord::Base;
     else
       Video.where("title like?","%#{query_string}%")
     end
+  end
+
+  def avg_rating
+    reviews.average(:rating).round(1) if reviews.average(:rating)
   end
 
 

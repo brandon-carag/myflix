@@ -7,6 +7,7 @@ describe Video do
   it { should belong_to(:category) }
   it { should validate_presence_of(:title) }
   it { should validate_presence_of(:description) }
+  it { should have_many(:reviews).order('created_at DESC') }
 
 #.search_by_title tests
 
@@ -40,6 +41,22 @@ describe '.search_by_title' do
   end
 
 end
+
+describe '.avg_rating' do
+
+  it "returns one decimal digit" do
+    video=Fabricate(:video)
+    user=Fabricate(:user)
+    user2=Fabricate(:user)
+    user3=Fabricate(:user)
+    review1=Review.create(body:"text",rating:3,video_id:video.id,user_id:user.id)
+    review2=Review.create(body:"text",rating:3,video_id:video.id,user_id:user2.id)
+    review3=Review.create(body:"text",rating:1,video_id:video.id,user_id:user3.id)
+    expect(video.avg_rating).to eq(2.3)
+  end
+
+end
+
 
 #================================================================================================
 #unnecessary tests covered by rails or shoulda_matchers from thoughtbot

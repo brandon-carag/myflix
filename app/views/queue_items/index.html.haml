@@ -1,0 +1,36 @@
+%section.my_queue.container
+  .row
+    .col-sm-10.col-sm-offset-1
+      %article
+        %header
+          %h2 My Queue
+        = bootstrap_form_tag url: queue_items_update_queue_path do |f|
+          %table.table
+            %thead
+              %tr
+                %th(width="10%") List Order
+                %th(width="30%") Video Title
+                %th(width="10%") Play
+                %th(width="20%") Rating
+                %th(width="15%") Genre
+                %th(width="15%") Remove
+            %tbody
+              - @queue_items.each do |q|
+                %tr
+                  %td
+                    = f.text_field("queue_items[#{q.id}]",hide_label:true,value: q.list_order)
+                  %td
+                    = link_to q.video_title,video_path(q.video)
+                  %td
+                    = button_to "Play", nil, class: "btn btn-default"
+                  %td
+                    = f.select("reviews[#{q.id}]",options_for_select( [5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] },q.rating),hide_label:true,include_blank:true)
+                    / = f.select("reviews[#{q.id}]",options_for_select( [5,4,3,2,1].map {|n| ["#{n} #{"Star".pluralize(n)}",n] }),hide_label:true,prompt:"#{q.rating} #{"Star".pluralize(q.rating)}")
+                  %td
+                    = link_to q.category_name,category_path(q.video)
+                  %td
+                    = link_to "",queue_item_path(q.id), method: :delete, class: "i glyphicon glyphicon-remove"
+          =f.submit value: "Update Instant Queue", class: "btn btn-default"
+
+
+                    

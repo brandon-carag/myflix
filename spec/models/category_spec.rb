@@ -1,13 +1,11 @@
 require 'spec_helper'
 require 'shoulda/matchers'
-require 'pry'
 
 describe Category do
 
-#shoulda_matchers_from_thoughtbot
 it { should have_many(:videos) }
 
-describe '# recent_videos' do
+describe '#recent_videos' do
 
   it 'returns an empty array if there are no videos in the category' do
     test_category=Category.create(name:"Drama")
@@ -16,17 +14,13 @@ describe '# recent_videos' do
 
   it 'returns only 6 videos if there are more than 6 videos' do
     test_category=Category.create(name:"Test Category")
-    7.times do
-    Video.create(title:"Test Movie",description:"Test Description",category:test_category)
-    end
+    7.times { Video.create(title:"Test Movie",description:"Test Description",category:test_category) }
     expect(test_category.recent_videos.size).to eq(6)
   end
 
   it 'returns all of the videos if there are less than 6 videos' do
     test_category=Category.create(name:"Drama")
-    5.times do
-    Video.create(title:"Test Movie",description:"Test Description",category:test_category)
-    end
+    5.times { Video.create(title:"Test Movie",description:"Test Description",category:test_category) }
     expect(test_category.recent_videos.size).to eq(test_category.videos.size)
   end
 
