@@ -2,23 +2,22 @@ require 'spec_helper'
 require 'pry'
 
 describe QueueItemsController do
-
   describe 'POST update_queue' do
     context "user is authenticated" do
       before do
         Fabrication.clear_definitions
-        # session[:user_id] = Fabricate(:user).id
       end
 
       context "input is valid" do
+        let(:user) { Fabricate(:user)}
+        before do
+          session[:user_id] = user.id
+        end
 
         it "Assigns list_order" do
-          user = Fabricate(:user)
-          session[:user_id] = user.id
           item1 = Fabricate(:queue_item,user_id:user.id)
           item2 = Fabricate(:queue_item,user_id:user.id)
           item3 = Fabricate(:queue_item,user_id:user.id)
-
 
           post :update_queue, queue_items:{item1.id=>3 ,item2.id =>2 ,item3.id => 1 },reviews:{}
 
@@ -28,8 +27,6 @@ describe QueueItemsController do
         end
 
         it "assigns list_order when list_order is not sequential" do
-          user = Fabricate(:user)
-          session[:user_id] = user.id
           item1 = Fabricate(:queue_item,user_id:user.id)
           item2 = Fabricate(:queue_item,user_id:user.id)
           item3 = Fabricate(:queue_item,user_id:user.id)
@@ -43,8 +40,6 @@ describe QueueItemsController do
         end
 
         it "saves list_order for list orders with multiple digits" do
-          user = Fabricate(:user)
-          session[:user_id] = user.id
           item1 = Fabricate(:queue_item,user_id:user.id)
           item2 = Fabricate(:queue_item,user_id:user.id)
           item3 = Fabricate(:queue_item,user_id:user.id)
@@ -58,8 +53,6 @@ describe QueueItemsController do
         end
 
         it "Redirects to queue_items_path" do
-          user = Fabricate(:user)
-          session[:user_id] = user.id
           item1 = Fabricate(:queue_item,user_id:user.id)
           item2 = Fabricate(:queue_item,user_id:user.id)
           item3 = Fabricate(:queue_item,user_id:user.id)
@@ -70,20 +63,8 @@ describe QueueItemsController do
 
         end
 
-        it "rejects attempts to edit list_order for another user's queue items" do
-          user = Fabricate(:user)
-          session[:user_id] = user.id
-          item1 = Fabricate(:queue_item,user_id:user.id)  
-
-          post :update_queue, queue_items:{item1.id => 1000 },reviews:{}
-
-          expect(item1.reload.list_order).to eq(1)
-
-        end
 
         it "creates a review and rating" do
-          user = Fabricate(:user)
-          session[:user_id] = user.id
           video1 = Fabricate(:video)
           item1 = Fabricate(:queue_item,user_id:user.id,video_id:video1.id)  
 
@@ -94,11 +75,8 @@ describe QueueItemsController do
         end
 
         it "updates a single review's rating" do
-          user = Fabricate(:user)
-          session[:user_id] = user.id
           video1 = Fabricate(:video)
           review1 = Fabricate(:review,user_id:user.id,rating:1)
-
           item1 = Fabricate(:queue_item,user_id:user.id,video_id:video1.id)  
 
           post :update_queue, reviews:{item1.id => 5}
@@ -110,6 +88,16 @@ describe QueueItemsController do
 
       context "input is invalid" do
 
+        it "rejects attempts to edit list_order for another user's queue items" do
+          user = Fabricate(:user)
+          session[:user_id] = user.id
+          item1 = Fabricate(:queue_item,user_id:user.id)  
+
+          post :update_queue, queue_items:{item1.id => 1000 },reviews:{}
+
+          expect(item1.reload.list_order).to eq(1)
+
+        end
         it "does not save non-integer values" do
           user = Fabricate(:user)
           session[:user_id] = user.id
@@ -168,6 +156,7 @@ describe QueueItemsController do
 
       end
     end
+    
     context "user is unauthenticated" do
       it "redirects_to sign_in_path" do
       clear_user_session
