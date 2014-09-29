@@ -43,7 +43,7 @@ describe SessionsController do
 
       it "does not set the session hash if user doesn't exist" do
         post :create 
-        expect(session["user_id"]).to eq nil
+        expect(session["user_id"]).to be_nil
       end
 
       it "flashes error message" do

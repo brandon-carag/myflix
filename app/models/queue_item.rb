@@ -9,7 +9,7 @@ class QueueItem < ActiveRecord::Base
   delegate :category, to: :video
 
 def video_title
-  if Video.where(self.video_id).exists?
+  if Video.where(id:self.video_id).exists?
     Video.find(self.video_id).title
   else
     "Invalid video requested"

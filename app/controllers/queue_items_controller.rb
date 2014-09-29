@@ -17,8 +17,8 @@ class QueueItemsController < ApplicationController
 
   def index
     @queue_items=current_user.queue_items
-    video_ids = @queue_items.map { |item|item.video_id } #Produces an array of video ids
-    @videos=video_ids.map { |id| Video.find(id) }
+    video_ids = @queue_items.map(&:video_id)
+    @videos = Video.where(id:video_ids)
   end
 
   def create
@@ -44,9 +44,9 @@ class QueueItemsController < ApplicationController
 
   def update_review_ratings
     ActiveRecord::Base.transaction do 
-    params[:reviews].each do |k,v|
-      item = QueueItem.find(k)
-      item.update_rating(v) if item.user_id == current_user.id 
+    params[:reviews].each do |video_id,value|
+      item = QueueItem.find(video_id)
+      item.update_rating(value) if item.user_id == current_user.id 
     end
   end
 
@@ -54,9 +54,9 @@ class QueueItemsController < ApplicationController
 
   def update_queue_item_list_order
     ActiveRecord::Base.transaction do 
-      params[:queue_items].each do |k,v|
-        item = QueueItem.find(k)
-        item.update!(list_order:v) if item.user_id == current_user.id
+      params[:queue_items].each do |video_id,value|
+        item = QueueItem.find(video_id)
+        item.update!(list_order:value) if item.user_id == current_user.id
       end
     end
   end

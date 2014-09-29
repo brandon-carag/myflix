@@ -43,13 +43,6 @@ describe '.search_by_title' do
 end
 
 describe '.avg_rating' do
-  it "returns message if no reviews" do
-    video=Fabricate(:video)
-    # user=Fabricate(:user)
-    # user2=Fabricate(:user)
-    # user3=Fabricate(:user)
-    expect(video.avg_rating).to eq("Not reviewed")
-  end
 
   it "returns one decimal digit" do
     video=Fabricate(:video)

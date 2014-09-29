@@ -24,9 +24,11 @@ describe VideosController do
 
       it "brandon's test: displays most recent reviews first" do
         video=Fabricate(:video)
-        review1=Fabricate(:review, video_id:video.id, created_at: '2012-08-29 05:33:37.610206')
-        review2=Fabricate(:review, video_id:video.id,created_at:'2013-08-29 05:33:37.610206')
-        review3=Fabricate(:review, video_id:video.id,created_at:'2014-08-29 05:33:37.610206')
+
+        review1=Fabricate(:review, video_id:video.id, created_at: 3.months.ago)
+        review2=Fabricate(:review, video_id:video.id,created_at: 2.months.ago)
+        review3=Fabricate(:review, video_id:video.id,created_at: 1.month.ago)
+
         get :show, id: video.id
         expect(assigns(:reviews)).to eq([review3,review2,review1])
       end

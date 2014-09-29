@@ -14,10 +14,7 @@ class Video < ActiveRecord::Base;
   end
 
   def avg_rating
-    return "Not reviewed" if self.reviews.count==0
-    ratings=[]
-    reviews.each { |review| ratings.push(review.rating) }
-    avg = (ratings.sum / ratings.count.to_f).round(1)
+    reviews.average(:rating).round(1) if reviews.average(:rating)
   end
 
 
