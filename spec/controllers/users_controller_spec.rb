@@ -32,6 +32,28 @@ describe UsersController do
       end
     end
 
+  describe "GET show" do
+    context "user input is valid"
+      it "sets @user" do
+        user = Fabricate(:user)
+        set_user_session(user)
+
+        get :show, id:user.id 
+
+        expect(assigns(:user)).to be_instance_of(User)
+      end
+    context "user input is invalid" do
+      it "redirects to sign_in path" do
+        clear_user_session
+        user = Fabricate(:user)
+
+        get :show, id:user.id
+
+        expect(response).to redirect_to sign_in_path
+      end
+    end
+
+  end
 
     context "user input is invalid" do
       before do
