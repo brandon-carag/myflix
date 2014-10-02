@@ -2,6 +2,9 @@ class User < ActiveRecord::Base
   has_many :reviews
   has_many :queue_items
 
+  has_many :followings, :foreign_key => :follower_id 
+  has_many :followers, :class_name => :Following, :foreign_key => :followed_id
+
   validates_presence_of :email,:password,:full_name
   validates_uniqueness_of :email
   has_secure_password validations: false
