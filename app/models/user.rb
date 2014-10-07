@@ -1,7 +1,6 @@
 class User < ActiveRecord::Base
   has_many :reviews
   has_many :queue_items
-
   has_many :followings, :foreign_key => :follower_id 
   has_many :followers, :class_name => :Following, :foreign_key => :followed_id
 
@@ -16,6 +15,11 @@ class User < ActiveRecord::Base
   def video_in_queue?(video)
     array = queue_items.map {|n| n.video_id}
     array.include?(video.id)
+  end
+
+  def is_following 
+    #Returns an array of user objects
+    User.find(self.followings.map(&:followed_id))
   end
 
 end
