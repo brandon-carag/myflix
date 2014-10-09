@@ -8,10 +8,12 @@ class UsersController < ApplicationController
   def create
     @user=User.new(params.require(:user).permit(:email,:password,:full_name))
     if @user.save
-      redirect_to root_path
+      AppMailer.welcome_email(@user).deliver
+      render 'confirm_password_resets'
     else
       render 'new'
     end
+
   end
 
   def show

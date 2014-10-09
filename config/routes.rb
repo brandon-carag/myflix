@@ -9,10 +9,12 @@ Myflix::Application.routes.draw do
   # post 'queue_items/sort_list_order', to: 'queue_items#sort_list_order'
   post 'queue_items/update_queue', to: 'queue_items#update_queue'
 
+  resources :categories, only: [:show]
   resources :followings, only: [:index,:create,:destroy]
   resources :users, only: [:show,:index,:create]
   resources :sessions, only: [:create,:destroy]
-resources :queue_items, only: [:index,:create,:destroy]
+  resources :queue_items, only: [:index,:create,:destroy]
+  resources :password_resets
   resources :videos, except: :destroy do
     collection do
       get '/search', to: 'videos#search'
@@ -21,7 +23,5 @@ resources :queue_items, only: [:index,:create,:destroy]
       resources :reviews, only: [:create]
     end
   end
-
-  resources :categories, only: [:show]
 
 end

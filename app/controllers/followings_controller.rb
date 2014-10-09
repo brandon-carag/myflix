@@ -24,6 +24,8 @@ class FollowingsController < ApplicationController
     redirect_to followings_path
   end
 
+
+
   def strong_parameters
     params.require(:following).permit(:follower_id,:followed_id)
   end
