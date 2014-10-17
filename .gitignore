@@ -14,5 +14,3 @@
 /log/*.log
 /tmp
 
-# Ignore env variables (Brandon's addition)
-/config/environments/development.rb

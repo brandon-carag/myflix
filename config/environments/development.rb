@@ -20,13 +20,14 @@ Myflix::Application.configure do
   config.eager_load = false
 
   config.action_mailer.smtp_settings = {
-  address:              'smtp.gmail.com',
-  port:                 587,
-  domain:               'gmail.com',
-  user_name:            'brandon.carag',
-  password:             'bogus_pw',
-  authentication:       'plain',
-  enable_starttls_auto: true  }
+    :port           => ENV['MAILGUN_SMTP_PORT'],
+    :address        => ENV['MAILGUN_SMTP_SERVER'],
+    :user_name      => ENV['MAILGUN_SMTP_LOGIN'],
+    :password       => ENV['MAILGUN_SMTP_PASSWORD'],
+    :domain         => 'brandons-myflix.herokuapp.com',
+    :authentication => :plain
+  }
+
 
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true

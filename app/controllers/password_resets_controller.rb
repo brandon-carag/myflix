@@ -6,7 +6,7 @@ end
 def create
   if @user = User.find_by_email(params["email"])
     @user.generate_auth_token
-    # AppMailer.forgot_pw(@user).deliver
+    AppMailer.forgot_pw(@user).deliver
     # TODO: Make the email generate the full URL and configure ActionMailer
     render 'confirm_password_resets' 
   else
