@@ -16,15 +16,16 @@ def create
 end
 
 def edit
-  if (@user = User.find_by_auth_token(params[:id]) ) && @user.auth_token_expired? != false
-  else
-    render :text => 'Not Found', :status => '404'
+  if @user = User.find_by_auth_token(params[:id]) 
+    if @user.auth_token_expired?
+      render :text => 'Not Found', :status => '404'
+    end
   end
 end
 
 def update
   @user = User.find_by_auth_token(params[:id])
-  if @user.auth_token_expired? != false && @user.update(params.require(:user).permit(:password))
+  if @user.auth_token_expired? != true && @user.update(params.require(:user).permit(:password))
     flash[:success] = "You successfully updated your password."
     redirect_to sign_in_path
   else  

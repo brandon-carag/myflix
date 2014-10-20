@@ -46,6 +46,6 @@ describe PasswordResetsController do
     end
   end
 
-  describe 'POST' edit do
+  describe 'POST edit' do
   end
 end

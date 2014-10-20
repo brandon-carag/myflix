@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pry'
 
 feature "Social Networking" do
   # TODO: Possible refactor
@@ -21,7 +20,6 @@ feature "Social Networking" do
     fill_in 'Password', :with => "password"
     click_button "Sign In"
     find(:xpath, "//a[@href='/videos/1']").click
-    save_and_open_page; binding.pry;
     click_link user2.full_name
     click_button "Follow"
 

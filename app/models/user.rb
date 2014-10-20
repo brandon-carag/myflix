@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   end
 
   def auth_token_expired?
-    (Time.now - auth_token_created_at).hours > 7200
+    (Time.now - auth_token_created_at) > 7200
   end
 
   def should_validate_password?

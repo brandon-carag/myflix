@@ -21,4 +21,8 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
+  def invite
+    require_login
+  end
+
 end
