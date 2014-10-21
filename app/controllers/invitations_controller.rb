@@ -1,13 +1,18 @@
 class InvitationsController < ApplicationController
+  before_action :require_login
 
   def new
+    @invitation = Invitation.new
   end
 
   def create
-    if AppMailer.send_invite(params["invitation"],current_user).deliver
-      flash[:success] = "Your invite has been sent!"
+    invitation = Invitation.new(params.require(:invitation).permit(:recipient_email,:recipient_name,:message))
+    invitation.generate_invite_token
+
+    if invitation.save && AppMailer.send_invite(params["invitation"],current_user).deliver
+      flash[:success] = "An invitation was sent to the user"
     else
-      flash[:danger] = "Something went wrong with your invitation, please try sending again."
+      # flash[:danger] = "Something went wrong with your invitation, please try sending again."
     end
     redirect_to new_invitation_path
   end  

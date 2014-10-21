@@ -2,21 +2,21 @@
   .row
     .col-sm-10.col-sm-offset-1
       .invite
-        =bootstrap_form_tag url: invitations_path do |f|
+        =bootstrap_form_for @invitation,url: invitations_path do |f|
           %header
             %h1 Invite a friend to join MyFlix!
           %fieldset
             .form-group
               .row
                 .col-sm-4
-                  =f.text_field name = "invitation[friends_name]",label: "Friend's Name"
+                  =f.text_field name = :recipient_name,label: "Friend's Name"
             .form-group
               .row
                 .col-sm-4
-                  =f.email_field name = "invitation[friends_email]", label: "Friend's Email Address"
+                  =f.email_field name = :recipient_email, label: "Friend's Email Address"
             .form-group
               .row
                 .col-sm-6
-                  =f.text_area name = "invitation[message]",rows:6,label: "Invitation Message",value:"Please join this really cool site!"
+                  =f.text_area name = :message,rows:6,label: "Invitation Message",value:"Please join this really cool site!"
           %fieldset.form-group.action
             =f.submit value = "Send Invitation" 
