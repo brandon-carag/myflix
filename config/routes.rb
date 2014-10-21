@@ -2,7 +2,6 @@ Myflix::Application.routes.draw do
   
   root to: 'pages#front'
   get '/home', to: 'videos#index'
-  get '/invite', to: 'users#invite'
   get '/register', to: 'users#new'
   get '/sign_in', to: 'sessions#new'
   get '/sign_out', to: 'sessions#destroy'
@@ -11,6 +10,7 @@ Myflix::Application.routes.draw do
 
   resources :categories, only: [:show]
   resources :followings, only: [:index,:create,:destroy]
+  resources :invitations, only: [:new,:create]
   resources :password_resets, only: [:new,:create,:edit,:update]
   resources :queue_items, only: [:index,:create,:destroy]
   resources :sessions, only: [:create,:destroy]
