@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   has_many :queue_items
   has_many :followings, :foreign_key => :follower_id 
   has_many :followers, :class_name => :Following, :foreign_key => :followed_id
+  has_many :invitations, :foreign_key => :sender_id 
 
   validates_presence_of :email,:full_name
   validates_presence_of :password, :if => :should_validate_password?

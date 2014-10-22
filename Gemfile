@@ -25,7 +25,6 @@ group :development, :test do
   gem 'fabrication'
   gem 'faker'
   gem 'pry'
-  gem 'capybara'
   gem 'launchy'
   gem 'capybara-email'
 end

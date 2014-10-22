@@ -3,6 +3,7 @@ Myflix::Application.routes.draw do
   root to: 'pages#front'
   get '/home', to: 'videos#index'
   get '/register', to: 'users#new'
+  get '/register/:token', to: 'users#new_with_invitation', as: 'register_with_invite'
   get '/sign_in', to: 'sessions#new'
   get '/sign_out', to: 'sessions#destroy'
   get 'ui(/:action)', controller: 'ui'

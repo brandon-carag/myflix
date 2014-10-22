@@ -6,6 +6,7 @@ describe Invitation do
   it { should validate_presence_of(:recipient_email) }
   it { should validate_presence_of(:recipient_name) }
   it { should validate_presence_of(:message) }
+  it { should belong_to(:user) }
 
   describe ".generate_invite_token" do
     it "generates an invite token" do
@@ -14,6 +15,7 @@ describe Invitation do
     test_invitation.generate_invite_token
     expect(test_invitation).to be_truthy
     end
+
   end
 
 end

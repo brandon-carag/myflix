@@ -5,8 +5,17 @@ class UsersController < ApplicationController
     @user=User.new  
   end
 
+  def new_with_invitation
+    if @invitation = Invitation.find_by_invite_token(params["token"])
+      @user = User.new
+    else
+      redirect_to register_path
+    end
+  end
+
   def create
     @user=User.new(params.require(:user).permit(:email,:password,:full_name))
+
     if @user.save
       AppMailer.welcome_email(@user).deliver
       render 'confirm_password_resets'

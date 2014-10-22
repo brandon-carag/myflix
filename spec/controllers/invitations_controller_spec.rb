@@ -36,6 +36,15 @@ describe InvitationsController do
           expect(Invitation.count).to eq(1)
         end
 
+        it "assigns the current user as the sender" do
+          user = Fabricate(:user)
+          set_user_session(user)
+
+          post :create, invitation: Fabricate.attributes_for(:invitation)
+
+          expect(Invitation.last.sender_id).to eq(user.id)
+        end
+
         it "sends an email" do
           ActionMailer::Base.deliveries = []
           set_user_session
@@ -43,7 +52,6 @@ describe InvitationsController do
           post :create, invitation: Fabricate.attributes_for(:invitation)
 
           expect(ActionMailer::Base.deliveries.count).to eq(1)
-          # expect(ActionMailer::Base.deliveries.last.message).to include(user.auth_token)
         end
 
         it "sends an email to the correct recipient" do
@@ -52,8 +60,7 @@ describe InvitationsController do
           test_invitation = Fabricate(:invitation) 
 
           post :create, invitation: test_invitation.attributes 
-
-          expect(ActionMailer::Base.deliveries.last.message).to include(test_invitation.email)
+          expect(ActionMailer::Base.deliveries.last.to).to include(test_invitation.recipient_email)
         end
 
 
@@ -73,6 +80,16 @@ describe InvitationsController do
           expect(Invitation.last.invite_token).to be_truthy
         end
 
+        it "sends an email with the invitation token url" do
+          ActionMailer::Base.deliveries = []
+          set_user_session
+          test_invitation = Fabricate(:invitation) 
+
+          post :create, invitation: test_invitation.attributes
+          expect(ActionMailer::Base.deliveries.last.body).to include(Invitation.last.invite_token)
+ 
+        end
+
         it "redirects to the new_invitation path" do
           set_user_session
 
@@ -82,6 +99,13 @@ describe InvitationsController do
         end
       end
       context "user input is invalid" do
+        it "populates the flash hash with a failure message" do
+          set_user_session
+
+          post :create, invitation: {recipient_name:"John Doe"} 
+
+          expect(flash[:danger]).to be_truthy
+        end
       end
     end
 

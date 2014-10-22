@@ -17,6 +17,29 @@ describe UsersController do
     
   end
 
+  describe "GET new_with_invitation" do 
+    context "token is valid" do
+      it "sets @invitation" do
+      test_invitation = Fabricate(:invitation)
+      test_invitation.generate_invite_token
+      invite_token = test_invitation.invite_token
+
+      get :new_with_invitation, token: test_invitation.invite_token 
+      expect(assigns(:invitation)).to be_instance_of(Invitation)
+      end
+    end
+
+    context "token is invalid" do
+      it "redirects to root path" do
+
+      get :new_with_invitation, token: "bad_token" 
+
+      expect(response).to redirect_to register_path
+      end
+    end
+  end
+
+
   describe "POST create" do
     context "user input is valid" do
       before do
