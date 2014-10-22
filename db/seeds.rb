@@ -53,9 +53,12 @@ Video.create(title:"Inception",description:"A thief who steals corporate secrets
 
 end
 
+def create_users
 User.create(email:"brandon@email.com",password:"password",full_name:"Brandon Carag")
+end
 
 delete_all_data
+create_users
 populate_categories
 populate_movies
 fabricate_reviews

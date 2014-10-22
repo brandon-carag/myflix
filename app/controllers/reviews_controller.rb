@@ -10,7 +10,7 @@ before_action :require_login, only: [:create]
       flash[:success]="Thank you for reviewing #{@video.title}."
       redirect_to video_path(@video)
     else
-      flash[:danger]="There was something wrong with your review submission, please correct the errors.  You can only review a video once."
+      flash[:danger]="There was something wrong with your review submission.  You can only review a video once."
       render 'videos/show'
       # redirect_to video_path(@video)
     end
