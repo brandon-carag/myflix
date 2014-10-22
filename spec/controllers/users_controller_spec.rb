@@ -51,7 +51,7 @@ describe UsersController do
         end
 
       it "redirects if @user saves" do  
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to sign_in_path 
       end
     end
 

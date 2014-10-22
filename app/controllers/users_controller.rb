@@ -18,7 +18,8 @@ class UsersController < ApplicationController
 
     if @user.save
       AppMailer.welcome_email(@user).deliver
-      render 'confirm_password_resets'
+      flash[:success] = "You have successfully registered.  Please sign in below."
+      redirect_to sign_in_path
     else
       render 'new'
     end

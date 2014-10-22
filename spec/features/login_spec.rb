@@ -10,7 +10,7 @@ feature "User sign in" do
     fill_in 'Password', :with => "password"
     click_button "Sign In"
 
-    expect(page).to have_text(user.full_name)
+    expect(page).to have_content(user.full_name)
   end
 end
 
@@ -31,10 +31,10 @@ feature "Add video to queue" do
     expect(page).to have_text(video1.title)
     expect(page).not_to have_link("+ My Queue")
 
-    click_link "Videos"
+    click_link "Movies"
     find(:xpath, "//a[@href='/videos/2']").click
     click_link "+ My Queue"
-    click_link "Videos"
+    click_link "Movies"
     find(:xpath, "//a[@href='/videos/3']").click
     click_link "+ My Queue"
 

@@ -27,22 +27,25 @@ describe PasswordResetsController do
 
         expect(user.reload.auth_token).to_not eq(auth_token)
       end
-
+    context 'emailing a user' do
       it "sends an email" do
+        ActionMailer::Base.deliveries = []
         user = Fabricate(:user)
 
-        post :create, user: Fabricate.attributes_for(:user)
+        post :create, email: user.email 
 
         expect(ActionMailer::Base.deliveries.count).to eq(1)
       end
 
       it "sends an email with the user's token" do
+        ActionMailer::Base.deliveries = []
         user = Fabricate(:user)
 
-        post :create, user: Fabricate.attributes_for(:user)
+        post :create, email: user.email 
 
-        expect(ActionMailer::Base.deliveries.last.message).to include(user.auth_token)
+        expect(ActionMailer::Base.deliveries.last.body).to include(user.auth_token)
       end
+    end
     end
   end
 
