@@ -7,17 +7,26 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 def delete_all_data
-  arr=[Video,Category]
+  arr=[Video,Category,QueueItem,Review]
   arr.each{|arr_element|arr_element.delete_all}
 end
 
-delete_all_data
-
-categories=["Indie Films","Action/Adventure","Drama"]
-categories.each do |category|
-  Category.create(name:category)
+def fabricate_reviews
+  Video.all.each do |video| 
+    10.times do
+      Fabricate(:review,video_id:video.id)
+    end
+  end
 end
 
+def populate_categories
+  categories=["Indie Films","Action/Adventure","Drama"]
+  categories.each do |category|
+    Category.create(name:category)
+  end
+end
+
+def populate_movies
 #Indie Films
 Video.create(title:"Ain't Them Bodies Saints",description:"The tale of an outlaw who escapes from prison and sets out across the Texas hills to reunite with his wife and the daughter he has never met.",small_cover_url:"/tmp/aint_them_bodies_saints.jpg",large_cover_url:"/tmp/family_guy.jpg",category:Category.find_by(name: "Indie Films"))
 Video.create(title:"The Assasination of Jesse James",description:"Robert Ford, who's idolized Jesse James since childhood, tries hard to join the reforming gang of the Missouri outlaw, but gradually becomes resentful of the bandit leader.",small_cover_url:"/tmp/assassination_of_jesse_james.jpg",large_cover_url:"/tmp/family_guy.jpg",category:Category.find_by(name: "Indie Films"))
@@ -42,4 +51,11 @@ Video.create(title:"Legends of the Fall",description:"Epic tale of three brother
 Video.create(title:"Open Range",description:"A former gunslinger is forced to take up arms again when he and his cattle crew are threatened by a corrupt lawman.",small_cover_url:"/tmp/open_range.jpg",large_cover_url:"",category:Category.find_by(name: "Drama"))
 Video.create(title:"Inception",description:"A thief who steals corporate secrets through use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",small_cover_url:"/tmp/inception.jpg",large_cover_url:"",category:Category.find_by(name: "Drama"))
 
+end
+
 User.create(email:"brandon@email.com",password:"password",full_name:"Brandon Carag")
+
+delete_all_data
+populate_categories
+populate_movies
+fabricate_reviews
