@@ -53,6 +53,25 @@ describe UsersController do
       it "redirects if @user saves" do  
         expect(response).to redirect_to sign_in_path 
       end
+
+      it "creates a following if user is invited" do
+        user_attributes = Fabricate.attributes_for(:user)
+        Fabricate(:invitation,recipient_email: user_attributes["email"])
+
+        post :create, user: user_attributes 
+
+        expect(assigns(:user).followings.count).to eq(1)
+      end
+
+      it "creates two followings if user is invited" do
+        user_attributes = Fabricate.attributes_for(:user)
+        Fabricate(:invitation,recipient_email: user_attributes["email"])
+
+        post :create, user: user_attributes 
+
+        expect(Following.count).to eq(2)
+      end
+
     end
 
     context "sending email" do

@@ -40,4 +40,10 @@ class User < ActiveRecord::Base
     updating_password || new_record?
   end 
 
+  def assigns_following_if_invited
+    if invitation = Invitation.find_by(recipient_email:self.email)
+      Following.create(followed_id:invitation.sender_id,follower_id:self.id)
+      Following.create(followed_id:self.id,follower_id:invitation.sender_id)
+    end
+  end
 end

@@ -17,6 +17,7 @@ class UsersController < ApplicationController
     @user=User.new(params.require(:user).permit(:email,:password,:full_name))
 
     if @user.save
+      @user.assigns_following_if_invited
       AppMailer.welcome_email(@user).deliver
       flash[:success] = "You have successfully registered.  Please sign in below."
       redirect_to sign_in_path
