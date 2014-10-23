@@ -11,10 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140915175028) do
+ActiveRecord::Schema.define(version: 20141021235402) do
 
   create_table "categories", force: true do |t|
     t.string "name"
+  end
+
+  create_table "followings", force: true do |t|
+    t.integer  "follower_id"
+    t.integer  "followed_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "invitations", force: true do |t|
+    t.string   "recipient_name"
+    t.string   "recipient_email"
+    t.text     "message"
+    t.string   "invite_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "sender_id"
   end
 
   create_table "queue_items", force: true do |t|
@@ -41,6 +58,8 @@ ActiveRecord::Schema.define(version: 20140915175028) do
     t.string   "full_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "auth_token"
+    t.datetime "auth_token_created_at"
   end
 
   create_table "videos", force: true do |t|

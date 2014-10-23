@@ -1,0 +1,7 @@
+<body>
+  Dear <%= @invitation.recipient_name %>,
+  <br><br>     
+  <%= @user.full_name %> invited you to join MyFlix!  Click <%= link_to "here", register_with_invite_url(@invitation.invite_token), :host => "localhost" %> to sign up and automatically follow his or her movie queue.  Here's a special message from them:
+  <br><br>
+  <%= @invitation.message %>
+</body>
