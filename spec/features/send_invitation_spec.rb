@@ -1,4 +1,6 @@
 require 'spec_helper'
+Sidekiq::Testing.inline!
+
 
 feature "Send Invitation" do
 
@@ -34,6 +36,7 @@ feature "Send Invitation" do
     fill_in 'invitation_recipient_email', with: "johndoe@email.com"
     fill_in 'invitation_message', with: "Come join MyFlix!"
     click_button "Send Invitation"
+    sleep 1 
     open_email("johndoe@email.com")
     current_email.click_link 'here'
     fill_in 'user_password', with: "password"

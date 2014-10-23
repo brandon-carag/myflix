@@ -1,14 +1,15 @@
 require 'spec_helper'
-require 'pry'
+Sidekiq::Testing.inline!
 
 describe InvitationsController do
   describe 'GET new' do
     context "user is authenticated" do
-      it "assigns @invitation" do
+      it "sets @invitation to a new invitation" do
         set_user_session
 
         get :new
 
+        expect(assigns(:invitation)).to be_new_record
         expect(assigns(:invitation)).to be_instance_of(Invitation)
       end
     end
@@ -27,6 +28,8 @@ describe InvitationsController do
   describe 'POST create' do
     context "user is authenticated" do
       context "user input is valid" do
+        after {ActionMailer::Base.deliveries.clear }
+
         it "saves an invitation record" do
           ActionMailer::Base.deliveries = []
           set_user_session
@@ -50,8 +53,7 @@ describe InvitationsController do
           set_user_session
 
           post :create, invitation: Fabricate.attributes_for(:invitation)
-
-          expect(ActionMailer::Base.deliveries.count).to eq(1)
+          expect(ActionMailer::Base.deliveries.size).to eq(1)
         end
 
         it "sends an email to the correct recipient" do
@@ -93,7 +95,7 @@ describe InvitationsController do
         it "redirects to the new_invitation path" do
           set_user_session
 
-          post :create, invitation: {recipient_email:"johndoe@email.com"} 
+          post :create, invitation: Fabricate.attributes_for(:invitation) 
 
           expect(response).to redirect_to new_invitation_path
         end
@@ -106,16 +108,31 @@ describe InvitationsController do
 
           expect(flash[:danger]).to be_truthy
         end
+
+        it "sets renders new template" do
+          set_user_session  
+
+          post :create, invitation: {recipient_email:"johndoe@email.com"} 
+
+          expect(response).to render_template :new
+        end
+
+        it "sets @invitation so errors can be displayed" do
+          set_user_session
+
+          post :create, invitation: {recipient_email:"johndoe@email.com"} 
+
+          expect(assigns(:invitation)).to be_instance_of(Invitation)
+        end
+
       end
     end
 
     context "user is unauthenticated" do
-      it "redirects to register_path" do
-      clear_user_session
+      it "redirects to sign_in_path" do
+        post :create, invitation: {recipient_email:"johndoe@email.com"} 
 
-      post :create, {recipient_email:"johndoe@email.com"} 
-
-      expect(response).to redirect_to sign_in_path 
+        expect(response).to redirect_to sign_in_path
       end
     end
 

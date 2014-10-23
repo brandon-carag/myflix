@@ -1,5 +1,7 @@
 require 'spec_helper'
 require 'shoulda/matchers'
+require 'sidekiq/testing'
+Sidekiq::Testing.inline!
 
 describe Invitation do
   
