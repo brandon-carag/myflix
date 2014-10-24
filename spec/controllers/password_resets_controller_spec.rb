@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pry'
 
 describe PasswordResetsController do 
   describe 'POST create' do
@@ -18,6 +17,7 @@ describe PasswordResetsController do
 
         expect(user.reload.auth_token).to be_truthy
       end
+
       it "changes an auth token if it exists" do
         user = Fabricate(:user)
         user.generate_auth_token

@@ -82,6 +82,11 @@ describe InvitationsController do
           expect(Invitation.last.invite_token).to be_truthy
         end
 
+        it_behaves_like "tokenable" do
+          let(:object) { Fabricate(:invitation)}
+          let(:token_name) { "invite_token" }
+        end
+
         it "sends an email with the invitation token url" do
           ActionMailer::Base.deliveries = []
           set_user_session

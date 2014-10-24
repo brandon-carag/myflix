@@ -1,11 +1,13 @@
 require 'spec_helper'
-require 'pry'
+require 'database_cleaner'
 
 describe FollowingsController do
 
   describe 'POST create' do
     context "user is authenticated" do 
       before do
+        DatabaseCleaner.strategy = :truncation
+        DatabaseCleaner.clean
         set_user_session
       end
       context "user input is valid" do
@@ -18,7 +20,6 @@ describe FollowingsController do
 
         it "adds a following relationship" do
           post :create, following: Fabricate.attributes_for(:following)
-
           expect(Following.count).to eq(1)
         end
 
@@ -53,12 +54,11 @@ describe FollowingsController do
     end
 
     context "user in unauthenticated" do
-      it "redirects to sign_in" do
 
-      post :create, following: Fabricate.attributes_for(:following)
-
-      expect(response).to redirect_to sign_in_path
+      it_behaves_like "require_sign_in" do
+        let(:action) { post :create, following: Fabricate.attributes_for(:following) }
       end
+
     end
   end
 
@@ -77,12 +77,11 @@ describe FollowingsController do
     end
 
     context "user is unauthenticated" do
-      it "redirects to sign_in" do
 
-      get :index
-
-      expect(response).to redirect_to sign_in_path
+      it_behaves_like "require_sign_in" do
+        let(:action) { post :create, following: Fabricate.attributes_for(:following) }
       end
+
     end
   end
 
@@ -106,6 +105,12 @@ describe FollowingsController do
         delete :destroy, id:following.followed_id
 
         expect(response).to redirect_to sign_in_path
+      end
+
+      #TODO: Figure out whether shared examples have access to variables defined outside of a let statement
+      it_behaves_like "require_sign_in" do
+        following = Fabricate(:following)
+        let(:action) { delete :destroy, id:following.followed_id }
       end
     end
   end
