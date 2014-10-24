@@ -6,8 +6,6 @@ describe FollowingsController do
   describe 'POST create' do
     context "user is authenticated" do 
       before do
-        DatabaseCleaner.strategy = :truncation
-        DatabaseCleaner.clean
         set_user_session
       end
       context "user input is valid" do
@@ -19,6 +17,10 @@ describe FollowingsController do
         end
 
         it "adds a following relationship" do
+          # Uncomment the Database Cleaner lines to make the test pass
+          # DatabaseCleaner.strategy = :truncation
+          # DatabaseCleaner.clean
+          set_user_session
           post :create, following: Fabricate.attributes_for(:following)
           expect(Following.count).to eq(1)
         end
