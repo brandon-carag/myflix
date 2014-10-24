@@ -21,8 +21,6 @@ describe UsersController do
     context "token is valid" do
       it "sets @invitation" do
       test_invitation = Fabricate(:invitation)
-      test_invitation.generate_invite_token
-      invite_token = test_invitation.invite_token
 
       get :new_with_invitation, token: test_invitation.invite_token 
       expect(assigns(:invitation)).to be_instance_of(Invitation)

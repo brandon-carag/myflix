@@ -7,7 +7,7 @@ class InvitationsController < ApplicationController
 
   def create
     @invitation = Invitation.new(params.require(:invitation).permit(:recipient_email,:recipient_name,:message,:sender_id).merge!(sender_id:current_user.id))
-    @invitation.generate_invite_token
+    # @invitation.generate_invite_token
 
     if @invitation.save
       # Uncomment/Comment below to disable Sidekiq worker processing of email
