@@ -15,13 +15,11 @@ describe InvitationsController do
     end
 
     context "user is unauthenticated" do
-      it "redirects to register_path" do
-        clear_user_session
 
-        get :new
-
-        expect(response).to redirect_to sign_in_path 
+      it_behaves_like "require_sign_in" do
+        let(:action) { get :new }
       end
+
     end
   end
 
@@ -129,10 +127,9 @@ describe InvitationsController do
     end
 
     context "user is unauthenticated" do
-      it "redirects to sign_in_path" do
-        post :create, invitation: {recipient_email:"johndoe@email.com"} 
 
-        expect(response).to redirect_to sign_in_path
+      it_behaves_like "require_sign_in" do
+        let(:action) { post :create, invitation: {recipient_email:"johndoe@email.com"} }
       end
     end
 

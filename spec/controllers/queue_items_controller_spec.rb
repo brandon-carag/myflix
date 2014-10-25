@@ -225,13 +225,10 @@ describe QueueItemsController do
 
     context "user is unauthenticated" do
 
-      it "redirects to sign_in_path" do
-      session[:user_id] = nil
-
-      post :create, queue_item: Fabricate.attributes_for(:queue_item)
-      
-      expect(response).to redirect_to sign_in_path
+      it_behaves_like "require_sign_in" do
+        let(:action) { post :create, queue_item: Fabricate.attributes_for(:queue_item) }
       end
+
     end
     
     end

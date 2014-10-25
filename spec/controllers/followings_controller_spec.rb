@@ -57,12 +57,11 @@ end
     end
 
     context "user in unauthenticated" do
-      it "redirects to sign_in" do
 
-      post :create, following: Fabricate.attributes_for(:following)
-
-      expect(response).to redirect_to sign_in_path
+      it_behaves_like "require_sign_in" do
+        let(:action) { post :create, following: Fabricate.attributes_for(:following) }
       end
+
     end
   end
 
@@ -81,13 +80,11 @@ end
     end
 
     context "user is unauthenticated" do
-      it "redirects to sign_in" do
-
-      get :index
-
-      expect(response).to redirect_to sign_in_path
+      it_behaves_like "require_sign_in" do
+        let(:action) { get :index }
       end
     end
+
   end
 
   describe 'DELETE destroy' do
@@ -105,6 +102,7 @@ end
     end
 
     context "user is unauthenticated" do
+
       it "redirects to sign_in" do
         clear_user_session
         following = Fabricate(:following)
