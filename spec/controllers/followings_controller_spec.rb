@@ -1,7 +1,11 @@
 require 'spec_helper'
-require 'pry'
 
 describe FollowingsController do
+
+before do
+  DatabaseCleaner.strategy = :truncation
+  DatabaseCleaner.clean
+end
 
   describe 'POST create' do
     context "user is authenticated" do 
@@ -87,6 +91,7 @@ describe FollowingsController do
   end
 
   describe 'DELETE destroy' do
+
     context "user is authenticated" do
       it "deletes a following record" do
         user = Fabricate(:user)
@@ -98,6 +103,7 @@ describe FollowingsController do
         expect(Following.count).to eq(0)
       end
     end
+
     context "user is unauthenticated" do
       it "redirects to sign_in" do
         clear_user_session

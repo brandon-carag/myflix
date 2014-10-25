@@ -7,6 +7,8 @@ feature "Social Networking" do
   # let!(:video) { Fabricate(:video) }
   # let!(:review) { Fabricate(:review, user_id:user2.id, video_id:video.id) }
   before do
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
   end
 
   scenario "Follow a Person" do

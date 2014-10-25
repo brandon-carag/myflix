@@ -17,6 +17,12 @@ describe User do
 
 
   describe ".assigns_following_if_invited" do
+
+    before do
+      DatabaseCleaner.strategy = :truncation
+      DatabaseCleaner.clean
+    end
+
     it "creates two followings" do
       sender = Fabricate(:user)
       recipient = Fabricate(:user)

@@ -2,6 +2,10 @@ require 'spec_helper'
 require 'pry'
 
 describe UsersController do 
+  before do
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
+  end
   
   describe "GET new" do
     it "sets @user" do
