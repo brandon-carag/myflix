@@ -12,7 +12,7 @@ gem 'bootstrap_form'
 gem 'bcrypt-ruby'
 gem 'sidekiq'
 gem 'unicorn'
-gem 'sentry-raven'
+gem "sentry-raven", :require => 'raven'
 gem 'paratrooper'
 gem 'fabrication'
 
