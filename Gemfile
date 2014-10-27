@@ -15,6 +15,7 @@ gem 'unicorn'
 gem "sentry-raven", :require => 'raven'
 gem 'paratrooper'
 gem 'fabrication'
+gem 'carrierwave'
 
 group :development do
   gem 'sqlite3'
