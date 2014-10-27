@@ -3,8 +3,8 @@ require 'spec_helper'
 describe FollowingsController do
 
 before do
-  DatabaseCleaner.strategy = :truncation
-  DatabaseCleaner.clean
+  # DatabaseCleaner.strategy = :truncation
+  # DatabaseCleaner.clean
 end
 
   describe 'POST create' do
@@ -110,6 +110,10 @@ end
         delete :destroy, id:following.followed_id
 
         expect(response).to redirect_to sign_in_path
+      end
+
+      it_behaves_like "require_sign_in" do
+        let(:action) { delete :destroy, id:Fabricate(:following).followed_id }
       end
     end
   end

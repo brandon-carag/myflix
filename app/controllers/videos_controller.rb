@@ -1,4 +1,5 @@
-class VideosController < ApplicationController;
+class VideosController < ApplicationController
+  
 before_action :require_login, only: [:index,:show,:search]
 
 def index
