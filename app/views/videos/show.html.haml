@@ -1,5 +1,6 @@
 %article.video
   .container
+    =image_tag(@video.image)
     .row
       .video_large_cover.col-sm-7.col-sm-offset-1
         =image_tag(@video.small_cover_url) #TODO: Acquire images so you can change the attribute back to large_cover_url
