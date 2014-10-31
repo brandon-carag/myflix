@@ -15,4 +15,8 @@ def search
   @search_results=Video.search_by_title(params[:search_query])
 end
 
+def play_video
+  render '/shared/play_video'
+end
+
 end

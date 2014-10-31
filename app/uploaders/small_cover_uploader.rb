@@ -1,10 +1,9 @@
 # encoding: utf-8
 
 class SmallCoverUploader < CarrierWave::Uploader::Base
-
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
-  # include CarrierWave::MiniMagick
+  include CarrierWave::MiniMagick
 
   # Choose what kind of storage to use for this uploader:
   # storage :file
@@ -12,6 +11,12 @@ class SmallCoverUploader < CarrierWave::Uploader::Base
 
   # include CarrierWave::MimeTypes
   # process :set_content_type
+
+  process :resize_to_fit => [665,375]
+
+  version :small_cover do
+    process :resize_to_fill => [166,236]
+  end
 
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:

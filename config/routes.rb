@@ -8,6 +8,7 @@ Myflix::Application.routes.draw do
   get '/sign_out', to: 'sessions#destroy'
   get 'ui(/:action)', controller: 'ui'
   post 'queue_items/update_queue', to: 'queue_items#update_queue'
+  post '/play_video', to: 'videos#play_video'
 
   resources :categories, only: [:show]
   resources :followings, only: [:index,:create,:destroy]

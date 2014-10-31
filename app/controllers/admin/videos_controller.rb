@@ -5,7 +5,6 @@ def new
 end
 
 def create
-  binding.pry
   @video = Video.new(params.require(:video).permit(:title,:description,:category_id,:small_cover_url,:large_cover_url,:image))
 
   if @video.save
