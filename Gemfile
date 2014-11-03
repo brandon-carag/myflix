@@ -36,7 +36,7 @@ group :development, :test do
   gem 'launchy'
   gem 'capybara-email'
   gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
-  gem 'guard-rspec'
+  # gem 'guard-rspec'
 end
 
 group :test do
