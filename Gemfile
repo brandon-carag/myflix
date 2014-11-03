@@ -18,6 +18,7 @@ gem 'fabrication'
 gem 'carrierwave'
 gem 'fog'
 gem 'mini_magick'
+gem 'faker'
 
 group :development do
   gem 'sqlite3'
@@ -31,7 +32,6 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '2.99'
-  gem 'faker'
   gem 'pry'
   gem 'launchy'
   gem 'capybara-email'
