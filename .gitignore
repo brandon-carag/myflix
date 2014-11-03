@@ -14,3 +14,6 @@
 /log/*.log
 /tmp
 
+# Brandon's Addition:
+/lib/carrierwave/storage/fog.rb
+/config/initializers/carrierwave.rb

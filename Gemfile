@@ -12,9 +12,12 @@ gem 'bootstrap_form'
 gem 'bcrypt-ruby'
 gem 'sidekiq'
 gem 'unicorn'
-gem 'sentry-raven'
+gem "sentry-raven", :require => 'raven'
 gem 'paratrooper'
 gem 'fabrication'
+gem 'carrierwave'
+gem 'fog'
+gem 'mini_magick'
 
 group :development do
   gem 'sqlite3'
@@ -33,7 +36,7 @@ group :development, :test do
   gem 'launchy'
   gem 'capybara-email'
   gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
-  gem 'guard-rspec'
+  # gem 'guard-rspec'
 end
 
 group :test do

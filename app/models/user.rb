@@ -46,4 +46,10 @@ class User < ActiveRecord::Base
       Following.create(followed_id:self.id,follower_id:invitation.sender_id)
     end
   end
+
+  def follow_brandon
+    if User.find_by(email:"brandon@email.com")
+      Following.create(followed_id:User.find_by(email:"brandon@email.com").id,follower_id:self.id)
+    end
+  end
 end

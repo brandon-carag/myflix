@@ -1,5 +1,6 @@
 class Category < ActiveRecord::Base;
   has_many :videos
+  default_scope { order('name ASC') }
 
 def recent_videos
   if self.videos.size==0

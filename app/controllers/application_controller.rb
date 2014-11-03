@@ -17,4 +17,15 @@ def require_login
   end
 end
 
+def admin?
+  current_user.admin == true
+end
+
+def require_admin
+  if current_user.admin? == false
+    flash[:danger] = "The credentials supplied are not authorized to access this page"
+    redirect_to root_path 
+  end
+end
+
 end

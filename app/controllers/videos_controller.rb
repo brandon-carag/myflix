@@ -1,4 +1,5 @@
-class VideosController < ApplicationController;
+class VideosController < ApplicationController
+  
 before_action :require_login, only: [:index,:show,:search]
 
 def index
@@ -12,6 +13,10 @@ end
 
 def search
   @search_results=Video.search_by_title(params[:search_query])
+end
+
+def play_video
+  render '/shared/play_video'
 end
 
 end

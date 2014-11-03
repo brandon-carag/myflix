@@ -2,14 +2,14 @@
   .container
     .row
       .video_large_cover.col-sm-7.col-sm-offset-1
-        =image_tag(@video.small_cover_url) #TODO: Acquire images so you can change the attribute back to large_cover_url
+        =video_tag(@video.video_url,class: "myflix_video",size:"665x375",:controls => true,:poster => @video.large_cover_url)
       .video_info.col-sm-3
         %header
           %h3=@video.title
           %span="Rating: #{@video.avg_rating}/5.0"
         %p=@video.description
         .actions
-          %a.btn.btn-primary(href="") Watch Now
+          =button_to "Watch Now", play_video_path,class: "btn btn-primary", remote: true
           =link_to "+ My Queue",queue_items_path(:queue_item=>{ :video_id => @video.id,:user_id => current_user.id }), method: :post, class: "btn btn-default" unless current_user.video_in_queue?(@video)
 
 %section.reviews.container
