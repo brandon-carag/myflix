@@ -2,8 +2,7 @@
   .container
     .row
       .video_large_cover.col-sm-7.col-sm-offset-1
-        =video_tag("http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",class: "myflix_video",size:"665x375",:controls => true,:poster => @video.small_cover_url)
-
+        =video_tag(@video.video_url,class: "myflix_video",size:"665x375",:controls => true,:poster => @video.large_cover_url)
       .video_info.col-sm-3
         %header
           %h3=@video.title
