@@ -3,3 +3,9 @@ background-color: #FFFF66;
 box-shadow: 1px 1px 1px #888888;
 display: block;
 }
+
+.box_shadow_for_videos{
+-webkit-box-shadow: 0 12px 6px -6px gray;
+     -moz-box-shadow: 0 12px 6px -6px gray;
+          box-shadow: 0 12px 6px -6px gray;
+}

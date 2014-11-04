@@ -100,7 +100,7 @@ describe UsersController do
         post :create, user: attributes 
         message = ActionMailer::Base.deliveries.last
 
-        expect(message.body).to include("Thanks for joining")
+        expect(message.body).to include("Thank you for joining")
       end
 
       it "does not send out email with invalid inputs" do
