@@ -11,4 +11,4 @@
     -@category.videos.each do |video|
       .video.col-md-2
         =link_to video_path(video) do 
-          =image_tag(video.small_cover_url,size: "214x317")
+          =image_tag(video.small_cover_url,class: "box_shadow_for_videos", size: "214x317")
